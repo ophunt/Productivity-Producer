@@ -3,6 +3,7 @@ export const state = () => ({
 	debug: true,
 	player: {
 		lastUpdated: null,
+
 		effort: 0,
 		effortPerSecond: 0,
 		time: 0,
@@ -11,8 +12,11 @@ export const state = () => ({
 		productivityPerSecond: 0,
 		money: 0,
 		moneyPerSecond: 0,
+
 		projectsUnlocked: false,
 		projects: 0,
+
+		productsUnlocked: false,
 		products: 0,
 	},
 });
@@ -42,8 +46,16 @@ export const mutations = {
 			state.player.money += state.player.moneyPerSecond * delSeconds;
 		}
 		state.player.lastUpdated = curTime;
+	},
+
+	checkUnlocks (state) {
+		// Projects
 		if (!state.player.projectsUnlocked && state.player.productivity >= 10) {
 			state.player.projectsUnlocked = true;
+		}
+		// Products
+		if (!state.player.productsUnlocked && state.player.projects >= 10) {
+			state.player.productsUnlocked = true;
 		}
 	},
 
@@ -69,6 +81,7 @@ export const mutations = {
 	resetState (state) {
 		state.player = {
 			lastUpdated: null,
+
 			effort: 0,
 			effortPerSecond: 0,
 			time: 0,
@@ -77,8 +90,11 @@ export const mutations = {
 			productivityPerSecond: 0,
 			money: 0,
 			moneyPerSecond: 0,
+
 			projectsUnlocked: false,
 			projects: 0,
+
+			productsUnlocked: false,
 			products: 0,
 		};
 	},

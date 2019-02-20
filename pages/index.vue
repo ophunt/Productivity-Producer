@@ -59,16 +59,29 @@
 		<transition name="fade">
 			<div class="project-wrapper" v-if="projectsUnlocked">
 				<div
-				class="make-project"
+				class="make-project" id="project-maker"
 				v-b-tooltip.hover title="Create new Project for 10 Productivity (15 max)"
 				v-on:click="makeProject()">
 					<p>Make<br>Project</p>
 				</div>
 				<div
+				class="product"
+				v-for="n in products" :key="n*100"
+				v-b-tooltip.hover.html title="Earns you 10<br>Money per second">
+				<p>Product<br>{{ n }}</p>
+				</div>
+				<div
+				class="make-product"
+				v-if="projects >= 10 && products &lt; 6"
+				v-on:click="makeProduct()"
+				v-b-tooltip.hover.html title="Make a Product<br>using 10 Projects">
+				<p>Make<br>Product</p>
+				</div>
+				<div
 				class="project"
-				v-for="n in projects" :key="n"
+				v-for="n in (projects - (projects >= 10 && products &lt; 6))" :key="n"
 				v-b-tooltip.hover.html title="Earns you 1<br>Money per second">
-				<p>Project<br>{{ n }}</p>
+				<p>Project<br>{{ n + (projects >= 10 && products &lt; 6) }}</p>
 				</div>
 			</div>
 		</transition>
@@ -102,6 +115,7 @@ export default {
 
 		...mapMutations ([
 			"tick",
+			"checkUnlocks",
 		]),
 
 		setValue (resource, value) {
@@ -174,6 +188,19 @@ export default {
 				this.adjustCurrency("projects", 1);
 				this.adjustCurrency("productivity", -10);
 				this.updateRates();
+			} else {
+				this.tempTooltip("Not enough resources!",
+					"Create new Project for 10 Productivity (15 max)",
+					"project-maker",
+					1000);
+			}
+		},
+
+		makeProduct() {
+			if (this.projects >= 10 && this.products < 6) {
+				this.adjustCurrency("products", 1);
+				this.adjustCurrency("projects", -10);
+				this.updateRates();
 			}
 		},
 
@@ -226,6 +253,7 @@ export default {
 				}
 				autosaveCounter--;
 				this.tick();
+				this.checkUnlocks();
 			}, 100);
 		});
 	},
@@ -319,6 +347,13 @@ export default {
 	background-color: silver;
 }
 
+.make-product {
+	background-color: green;
+}
+
+.product {
+	background-color: gold;
+}
 
 .fade-enter-active, .fade-leave-active {
 	transition: opacity 1s;
