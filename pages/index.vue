@@ -35,7 +35,7 @@
 			<div class="productivity currency">
 				<div
 				class="currency-inner" id="productivity-inner"
-				v-on:click="productivityClick()"
+				v-on:click="makeProductivity()"
 				v-b-tooltip.hover.html title="Gain Productivity for<br>10 Effort and 1 Time">
 					<p>
 						Productivity:<br>{{ formatNumber(productivity) }}
@@ -44,15 +44,13 @@
 			</div>
 
 			<transition name="fade">
-				<div class="money-fader" v-if="projectsUnlocked">
-					<div class="money currency">
-						<div
-						class="currency-inner" id="money-inner"
-						v-b-tooltip.hover.html title="Money is earned<br>from Projects">
-							<p>
-								Money:<br>{{ formatNumber(money) }}
-							</p>
-						</div>
+				<div class="money currency" v-if="projectsUnlocked">
+					<div
+					class="currency-inner" id="money-inner"
+					v-b-tooltip.hover.html title="Money is earned<br>from Projects">
+						<p>
+							Money:<br>{{ formatNumber(money) }}
+						</p>
 					</div>
 				</div>
 			</transition>
@@ -69,8 +67,8 @@
 				<div
 				class="project"
 				v-for="n in projects" :key="n"
-				v-b-tooltip.hover title="Earns you money">
-				<p>Project {{ n }}</p>
+				v-b-tooltip.hover.html title="Earns you 1<br>Money per second">
+				<p>Project<br>{{ n }}</p>
 				</div>
 			</div>
 		</transition>
@@ -157,7 +155,7 @@ export default {
 			this.adjustCurrency("time", 1);
 		},
 
-		productivityClick() {
+		makeProductivity() {
 			if (this.effort >= 10 && this.time >= 1) {
 				this.adjustCurrency("effort", -10);
 				this.adjustCurrency("time", -1);
@@ -172,7 +170,7 @@ export default {
 		},
 
 		makeProject() {
-			if (this.productivity >= 10 && this.projects < 15) {
+			if (this.productivity >= 10 && this.projects + this.products < 15) {
 				this.adjustCurrency("projects", 1);
 				this.adjustCurrency("productivity", -10);
 				this.updateRates();
@@ -268,8 +266,11 @@ export default {
 
 /* replace currency and currency inner with a single element of inline-table */
 .currency {
-	display: inline-block;
+	display: block;
+	float: left;
 	cursor: pointer;
+	margin-bottom: 6px;
+	margin-right: 6px;
 }
 
 .currency-inner {
@@ -296,10 +297,13 @@ export default {
 
 .project-wrapper > * {
 	display: inline-table;
-	width: 100px;
-	height: 100px;
+	float: left;
+	width: 97px;
+	height: 97px;
 	border: 1px solid black;
 	text-align: center;
+	margin-bottom: 6px;
+	margin-right: 6px;
 }
 
 .project-wrapper > * > p {

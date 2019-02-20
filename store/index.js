@@ -1,5 +1,5 @@
 export const state = () => ({
-	VERSION: 0.3,
+	VERSION: "0.3.1",
 	debug: true,
 	player: {
 		lastUpdated: null,
