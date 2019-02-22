@@ -1,5 +1,8 @@
 CHANGELOG
 
+v0.5
+Added interns and employees
+
 v0.4
 Added Products
 

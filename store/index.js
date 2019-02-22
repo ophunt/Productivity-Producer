@@ -1,15 +1,18 @@
 export const state = () => ({
-	VERSION: "0.3.1",
+	VERSION: "0.4.99",
 	debug: true,
 	player: {
 		lastUpdated: null,
 
 		effort: 0,
 		effortPerSecond: 0,
+
 		time: 0,
 		timePerSecond: 0,
+
 		productivity: 0,
 		productivityPerSecond: 0,
+
 		money: 0,
 		moneyPerSecond: 0,
 
@@ -18,6 +21,12 @@ export const state = () => ({
 
 		productsUnlocked: false,
 		products: 0,
+
+		internsUnlocked: false,
+		interns: 0,
+
+		employeesUnlocked: false,
+		employees: 0,
 	},
 });
 
@@ -57,6 +66,14 @@ export const mutations = {
 		if (!state.player.productsUnlocked && state.player.projects >= 10) {
 			state.player.productsUnlocked = true;
 		}
+		// Interns
+		if (!state.player.internsUnlocked && state.player.products >= 1) {
+			state.player.internsUnlocked = true;
+		}
+		// Employees
+		if (!state.player.employeesUnlocked && state.player.products >= 2) {
+			state.player.employeesUnlocked = true;
+		}
 	},
 
 	load (state) {
@@ -84,10 +101,13 @@ export const mutations = {
 
 			effort: 0,
 			effortPerSecond: 0,
+
 			time: 0,
 			timePerSecond: 0,
+
 			productivity: 0,
 			productivityPerSecond: 0,
+
 			money: 0,
 			moneyPerSecond: 0,
 
@@ -96,6 +116,12 @@ export const mutations = {
 
 			productsUnlocked: false,
 			products: 0,
+
+			internsUnlocked: false,
+			interns: 0,
+
+			employeesUnlocked: false,
+			employees: 0,
 		};
 	},
 };

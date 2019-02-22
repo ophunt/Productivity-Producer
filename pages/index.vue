@@ -36,7 +36,8 @@
 				<div
 				class="currency-inner" id="productivity-inner"
 				v-on:click="makeProductivity()"
-				v-b-tooltip.hover.html title="Gain Productivity for<br>10 Effort and 1 Time">
+				v-b-tooltip.hover.html title="Gain Productivity
+				<br>Earns 1 Effort per second<br>Costs 10 Effort and 1 Time">
 					<p>
 						Productivity:<br>{{ formatNumber(productivity) }}
 					</p>
@@ -56,35 +57,67 @@
 			</transition>
 		</div>
 
-		<transition name="fade">
-			<div class="project-wrapper" v-if="projectsUnlocked">
-				<div
-				class="make-project" id="project-maker"
-				v-b-tooltip.hover title="Create new Project for 10 Productivity (15 max)"
-				v-on:click="makeProject()">
-					<p>Make<br>Project</p>
+		<div class="projects">
+			<transition name="fade">
+				<div class="project-wrapper" v-if="projectsUnlocked">
+					<div
+					class="make-project" id="project-maker"
+					v-b-tooltip.hover title="Create new Project for 10 Productivity (15 max)"
+					v-on:click="makeProject()">
+						<p>Make<br>Project</p>
+					</div>
+					<div
+					class="product"
+					v-for="n in products" :key="n*100"
+					v-b-tooltip.hover.html title="Earns you 10<br>Money per second">
+					<p>Product<br>{{ n }}</p>
+					</div>
+					<div
+					class="make-product"
+					v-if="projects >= 10 && products &lt; 6"
+					v-on:click="makeProduct()"
+					v-b-tooltip.hover.html title="Make a Product<br>using 10 Projects">
+					<p>Make<br>Product</p>
+					</div>
+					<div
+					class="project"
+					v-for="n in (projects - (projects >= 10 && products &lt; 6))" :key="n"
+					v-b-tooltip.hover.html title="Earns you 1<br>Money per second">
+					<p>Project<br>{{ n + (projects >= 10 && products &lt; 6) }}</p>
+					</div>
 				</div>
-				<div
-				class="product"
-				v-for="n in products" :key="n*100"
-				v-b-tooltip.hover.html title="Earns you 10<br>Money per second">
-				<p>Product<br>{{ n }}</p>
+			</transition>
+		</div>
+
+		<div class="workers">
+			<transition name="fade">
+				<div class="intern-wrapper" v-if="internsUnlocked">
+					<div
+					id="intern-gain" class="worker-gain"
+					v-on:click="hireIntern()"
+					v-b-tooltip.hover.html title="Hire Intern<br>Earns 0.2 Time per second
+							<br>Costs 1 Money per second">
+					<p class="add-worker">+</p>
+					<br>
+					<p>Interns</p>
+					<br>
+					<p class="remove-worker">-</p>
+					</div>
 				</div>
-				<div
-				class="make-product"
-				v-if="projects >= 10 && products &lt; 6"
-				v-on:click="makeProduct()"
-				v-b-tooltip.hover.html title="Make a Product<br>using 10 Projects">
-				<p>Make<br>Product</p>
+			</transition>
+
+			<transition name="fade">
+				<div class="employee-wrapper" v-if="employeesUnlocked">
+					<div
+					id="employee-gain" class="worker-gain"
+					v-on:click="hireEmployee()"
+					v-b-tooltip.hover.html title="Hire Employee<br>Earns 0.1 Productivity<br>per second
+							<br>Costs 1 Effort, 0.1 Time,<br>and 1 Money per second">
+					<p>Employees</p>
+					</div>
 				</div>
-				<div
-				class="project"
-				v-for="n in (projects - (projects >= 10 && products &lt; 6))" :key="n"
-				v-b-tooltip.hover.html title="Earns you 1<br>Money per second">
-				<p>Project<br>{{ n + (projects >= 10 && products &lt; 6) }}</p>
-				</div>
-			</div>
-		</transition>
+			</transition>
+		</div>
 	</div>
 </template>
 
@@ -106,7 +139,12 @@ export default {
 			money: state => state.player.money,
 			projectsUnlocked: state => state.player.projectsUnlocked,
 			projects: state => state.player.projects,
+			productsUnlocked: state => state.player.products,
 			products: state => state.player.products,
+			internsUnlocked: state => state.player.internsUnlocked,
+			interns: state => state.player.interns,
+			employeesUnlocked: state => state.player.employeesUnlocked,
+			employees: state => state.player.employees,
 		}),
 
 	},
@@ -139,19 +177,27 @@ export default {
 		},
 
 		calcEffortPerSecond() {
-			return this.productivity;
+			let income = this.productivity;
+			let costs = this.employees * 10 * 0.1;
+			return income - costs;
 		},
 
 		calcTimePerSecond() {
-			return 0;
+			let income = this.interns;
+			let costs = this.employees * 0.1;
+			return income - costs;
 		},
 
 		calcProductivityPerSecond() {
-			return 0;
+			let income = this.employees * 0.1;
+			let costs = 0;
+			return income - costs;
 		},
 
 		calcMoneyPerSecond() {
-			return this.projects + this.products * 10;
+			let income = this.projects * 1 + this.products * 10;
+			let costs = this.interns * 1 + this.employees * 1;
+			return income - costs;
 		},
 
 		updateRates() {
@@ -177,7 +223,7 @@ export default {
 				this.updateRates();
 			} else {
 				this.tempTooltip("Not enough resources!",
-					"Gain Productivity for<br>10 Effort and 1 Time",
+					"Gain Productivity<br>Earns 1 Effort per second<br>Costs 10 Effort and 1 Time",
 					"productivity-inner",
 					1000);
 			}
@@ -188,8 +234,13 @@ export default {
 				this.adjustCurrency("projects", 1);
 				this.adjustCurrency("productivity", -10);
 				this.updateRates();
-			} else {
+			} else if (this.projects + this.products < 15) {
 				this.tempTooltip("Not enough resources!",
+					"Create new Project for 10 Productivity (15 max)",
+					"project-maker",
+					1000);
+			} else {
+				this.tempTooltip("Max projects reached!",
 					"Create new Project for 10 Productivity (15 max)",
 					"project-maker",
 					1000);
@@ -202,6 +253,26 @@ export default {
 				this.adjustCurrency("projects", -10);
 				this.updateRates();
 			}
+		},
+
+		fireLowestWorker() {
+			if (interns > 0) {
+				this.adjustCurrency("interns", -1);
+				adjustRates();
+			} else if (employees > 0) {
+				this.adjustCurrency("employees", -1);
+				adjustRates();
+			}
+		},
+
+		hireIntern() {
+			this.adjustCurrency("interns", 1);
+			this.updateRates();
+		},
+
+		hireEmployee() {
+			this.adjustCurrency("employees", 1);
+			this.updateRates();
 		},
 
 		formatNumber(num) {
@@ -289,6 +360,9 @@ export default {
 }
 
 .currencies {
+	display: block;
+	clear: both;
+	width: 100%;
 	margin: 5px;
 }
 
@@ -319,8 +393,15 @@ export default {
 	display: inline;
 }
 
-.project-wrapper {
+.projects {
+	display: block;
+	clear: both;
+	width: 900px;
 	margin: 5px;
+}
+
+.project-wrapper {
+	margin: 0px;
 }
 
 .project-wrapper > * {
@@ -341,6 +422,7 @@ export default {
 
 .make-project {
 	background-color: #00FF00;
+	cursor: pointer;
 }
 
 .project {
@@ -349,10 +431,39 @@ export default {
 
 .make-product {
 	background-color: green;
+	cursor: pointer;
 }
 
 .product {
 	background-color: gold;
+}
+
+.workers {
+	display: block;
+	clear: both;
+	width: 100%;
+	margin: 5px;
+}
+
+.workers > * {
+	float: left;
+	margin-bottom: 5px;
+	margin-right: 5px;
+}
+
+.worker-gain {
+	display: table;
+	background-color: aqua;
+	border: 1px solid black;
+	width: 125px;
+	height: 100px;
+	cursor: pointer;
+}
+
+.worker-gain > p {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
 }
 
 .fade-enter-active, .fade-leave-active {
