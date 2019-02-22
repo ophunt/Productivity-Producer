@@ -1,5 +1,9 @@
 CHANGELOG
 
+v0.5.1
+Added empty slots to display limit of projects/products
+Added more gradual reveal to early currencies
+
 v0.5
 Added interns and employees
 

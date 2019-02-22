@@ -1,5 +1,5 @@
 export const state = () => ({
-	VERSION: "0.4.99",
+	VERSION: "0.5.4",
 	debug: true,
 	player: {
 		lastUpdated: null,
@@ -7,9 +7,11 @@ export const state = () => ({
 		effort: 0,
 		effortPerSecond: 0,
 
+		timeUnlocked: false,
 		time: 0,
 		timePerSecond: 0,
 
+		productivityUnlocked: false,
 		productivity: 0,
 		productivityPerSecond: 0,
 
@@ -58,6 +60,14 @@ export const mutations = {
 	},
 
 	checkUnlocks (state) {
+		// Time
+		if (!state.player.timeUnlocked && state.player.effort >= 10) {
+			state.player.timeUnlocked = true;
+		}
+		// Productivity
+		if (!state.player.productivityUnlocked && state.player.time >= 1) {
+			state.player.productivityUnlocked = true;
+		}
 		// Projects
 		if (!state.player.projectsUnlocked && state.player.productivity >= 10) {
 			state.player.projectsUnlocked = true;
@@ -102,9 +112,11 @@ export const mutations = {
 			effort: 0,
 			effortPerSecond: 0,
 
+			timeUnlocked: false,
 			time: 0,
 			timePerSecond: 0,
 
+			productivityUnlocked: false,
 			productivity: 0,
 			productivityPerSecond: 0,
 

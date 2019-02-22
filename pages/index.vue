@@ -21,34 +21,39 @@
 				</div>
 			</div>
 
-			<div class="time currency">
-				<div
-				class="currency-inner"
-				v-on:click="timeClick()"
-				v-b-tooltip.hover title="Gain Time">
-					<p>
-						Time:<br>{{ formatNumber(time) }}
-					</p>
+			<transition name="fade">
+				<div class="time currency" v-if="timeUnlocked">
+					<div
+					class="currency-inner"
+					v-on:click="timeClick()"
+					v-b-tooltip.hover title="Gain Time">
+						<p>
+							Time:<br>{{ formatNumber(time) }}
+						</p>
+					</div>
 				</div>
-			</div>
+			</transition>
 
-			<div class="productivity currency">
-				<div
-				class="currency-inner" id="productivity-inner"
-				v-on:click="makeProductivity()"
-				v-b-tooltip.hover.html title="Gain Productivity
-				<br>Earns 1 Effort per second<br>Costs 10 Effort and 1 Time">
-					<p>
-						Productivity:<br>{{ formatNumber(productivity) }}
-					</p>
+			<transition name="fade">
+				<div class="productivity currency" v-if="productivityUnlocked">
+					<div
+					class="currency-inner" id="productivity-inner"
+					v-on:click="makeProductivity()"
+					v-b-tooltip.hover.html title="Gain Productivity<br>
+												  Earns 1 Effort per second<br>Costs 10 Effort and 1 Time">
+						<p>
+							Productivity:<br>{{ formatNumber(productivity) }}
+						</p>
+					</div>
 				</div>
-			</div>
+			</transition>
 
 			<transition name="fade">
 				<div class="money currency" v-if="projectsUnlocked">
 					<div
 					class="currency-inner" id="money-inner"
-					v-b-tooltip.hover.html title="Money is earned<br>from Projects">
+					v-b-tooltip.hover.html title="Money is earned<br>from Projects<br>
+												  If you run out,<br>workers will be fired">
 						<p>
 							Money:<br>{{ formatNumber(money) }}
 						</p>
@@ -85,6 +90,11 @@
 					v-b-tooltip.hover.html title="Earns you 1<br>Money per second">
 					<p>Project<br>{{ n + (projects >= 10 && products &lt; 6) }}</p>
 					</div>
+					<div
+					class="slot"
+					v-for="n in (15 - products - projects)" :key="n/100">
+					<p>Empty<br>Slot</p>
+					</div>
 				</div>
 			</transition>
 		</div>
@@ -94,14 +104,12 @@
 				<div class="intern-wrapper" v-if="internsUnlocked">
 					<div
 					id="intern-gain" class="worker-gain"
-					v-on:click="hireIntern()"
-					v-b-tooltip.hover.html title="Hire Intern<br>Earns 0.2 Time per second
-							<br>Costs 1 Money per second">
-					<p class="add-worker">+</p>
-					<br>
-					<p>Interns</p>
-					<br>
-					<p class="remove-worker">-</p>
+					v-b-tooltip.hover.html title="Hire Intern<br>Earns 0.2 Time per second<br>
+												  Costs 1 Money per second">
+					<div class="add-worker"
+					v-on:click="hireIntern()"><button>+</button></div>
+					<div>Interns</div>
+					<div class="remove-worker">-</div>
 					</div>
 				</div>
 			</transition>
@@ -110,10 +118,12 @@
 				<div class="employee-wrapper" v-if="employeesUnlocked">
 					<div
 					id="employee-gain" class="worker-gain"
-					v-on:click="hireEmployee()"
-					v-b-tooltip.hover.html title="Hire Employee<br>Earns 0.1 Productivity<br>per second
-							<br>Costs 1 Effort, 0.1 Time,<br>and 1 Money per second">
-					<p>Employees</p>
+					v-b-tooltip.hover.html title="Hire Employee<br>Earns 0.1 Productivity<br>per second<br>
+												  Costs 1 Effort, 0.1 Time,<br>and 1 Money per second">
+					<div class="add-worker"
+					v-on:click="hireEmployee()">+</div>
+					<div>Employees</div>
+					<div class="remove-worker">-</div>
 					</div>
 				</div>
 			</transition>
@@ -134,7 +144,9 @@ export default {
 		...mapState ({
 			debug: state => state.debug,
 			effort: state => state.player.effort,
+			timeUnlocked: state => state.player.timeUnlocked,
 			time: state => state.player.time,
+			productivityUnlocked: state => state.player.productivityUnlocked,
 			productivity: state => state.player.productivity,
 			money: state => state.player.money,
 			projectsUnlocked: state => state.player.projectsUnlocked,
@@ -183,7 +195,7 @@ export default {
 		},
 
 		calcTimePerSecond() {
-			let income = this.interns;
+			let income = this.interns * 0.2;
 			let costs = this.employees * 0.1;
 			return income - costs;
 		},
@@ -256,12 +268,12 @@ export default {
 		},
 
 		fireLowestWorker() {
-			if (interns > 0) {
+			if (this.interns > 0) {
 				this.adjustCurrency("interns", -1);
-				adjustRates();
-			} else if (employees > 0) {
+				this.updateRates();
+			} else if (this.employees > 0) {
 				this.adjustCurrency("employees", -1);
-				adjustRates();
+				this.updateRates();
 			}
 		},
 
@@ -311,6 +323,15 @@ export default {
 			this.setValue(res, val);
 		},
 
+		gameTick() {
+			this.tick();
+			this.checkUnlocks();
+			if (this.money < 0) {
+				this.fireLowestWorker();
+				this.setValue("money", 0);
+			}
+		}
+
 	},
 
 	mounted: function () {
@@ -323,8 +344,7 @@ export default {
 					autosaveCounter = 1200;
 				}
 				autosaveCounter--;
-				this.tick();
-				this.checkUnlocks();
+				this.gameTick();
 			}, 100);
 		});
 	},
@@ -438,6 +458,16 @@ export default {
 	background-color: gold;
 }
 
+.slot {
+	background-color: white;
+	display: table;
+}
+
+.slot > p {
+	display: table-cell;
+	vertical-align: center;
+}
+
 .workers {
 	display: block;
 	clear: both;
@@ -457,13 +487,19 @@ export default {
 	border: 1px solid black;
 	width: 125px;
 	height: 100px;
+}
+
+.worker-gain > div {
+	display: table-row;
+	text-align: center;
+	padding: 0px;
+	clear: none;
 	cursor: pointer;
 }
 
-.worker-gain > p {
-	display: table-cell;
+.worker-gain > div:nth-child(2) {
 	vertical-align: middle;
-	text-align: center;
+	cursor: default;
 }
 
 .fade-enter-active, .fade-leave-active {
