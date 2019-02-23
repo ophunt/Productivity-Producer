@@ -79,16 +79,16 @@
 					</div>
 					<div
 					class="make-product"
-					v-if="projects >= 10 && products &lt; 6"
+					v-if="projects >= 5"
 					v-on:click="makeProduct()"
-					v-b-tooltip.hover.html title="Make a Product<br>using 10 Projects">
+					v-b-tooltip.hover.html title="Make a Product<br>using 5 Projects">
 					<p>Make<br>Product</p>
 					</div>
 					<div
 					class="project"
-					v-for="n in (projects - (projects >= 10 && products &lt; 6))" :key="n"
+					v-for="n in (projects - (projects >= 5))" :key="n"
 					v-b-tooltip.hover.html title="Earns you 1<br>Money per second">
-					<p>Project<br>{{ n + (projects >= 10 && products &lt; 6) }}</p>
+					<p>Project<br>{{ n + (projects >= 5) }}</p>
 					</div>
 					<div
 					class="slot"
@@ -108,8 +108,9 @@
 												  Costs 1 Money per second">
 					<div class="add-worker"
 					v-on:click="hireIntern()"><button>+</button></div>
-					<div>Interns</div>
-					<div class="remove-worker">-</div>
+					<div>Interns: {{ interns }}</div>
+					<div class="remove-worker"
+					v-on:click="fireIntern()"><button>-</button></div>
 					</div>
 				</div>
 			</transition>
@@ -120,10 +121,31 @@
 					id="employee-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="Hire Employee<br>Earns 0.1 Productivity<br>per second<br>
 												  Costs 1 Effort, 0.1 Time,<br>and 1 Money per second">
-					<div class="add-worker"
-					v-on:click="hireEmployee()">+</div>
-					<div>Employees</div>
-					<div class="remove-worker">-</div>
+					<div class="add-worker">
+						<button v-on:click="hireEmployee()">+</button>
+					</div>
+					<div>Employees: {{ employees }}</div>
+					<div class="remove-worker">
+						<button v-on:click="fireEmployee()">-</button>
+					</div>
+					</div>
+				</div>
+			</transition>
+
+			<transition name="fade">
+				<div class="manager-wrapper" v-if="managersUnlocked">
+					<div
+					id="manager-gain" class="worker-gain"
+					v-b-tooltip.hover.html title="Hire Manager<br>Attempts to make<br>a Project every minute<br>
+												  and to make a Products<br>every 5 minutes<br>
+												  Costs 1 Money per Second">
+					<div class="add-manager">
+						<button v-on:click="hireManager()">+</button>
+					</div>
+					<div>Managers: {{ managers }}</div>
+					<div class="remove-manager">
+						<button v-on:click="fireManager()">-</button>
+					</div>
 					</div>
 				</div>
 			</transition>
@@ -157,6 +179,10 @@ export default {
 			interns: state => state.player.interns,
 			employeesUnlocked: state => state.player.employeesUnlocked,
 			employees: state => state.player.employees,
+			managersUnlocked: state => state.player.managersUnlocked,
+			managers: state => state.player.managers,
+			managerProjectProgress: state => state.player.managerProjectProgress,
+			managerProductProgress: state => state.player.managerProductProgress,
 		}),
 
 	},
@@ -207,8 +233,8 @@ export default {
 		},
 
 		calcMoneyPerSecond() {
-			let income = this.projects * 1 + this.products * 10;
-			let costs = this.interns * 1 + this.employees * 1;
+			let income = this.projects * 1 + this.products * 5;
+			let costs = this.interns * 1 + this.employees * 1 + this.managers * 1;
 			return income - costs;
 		},
 
@@ -260,20 +286,38 @@ export default {
 		},
 
 		makeProduct() {
-			if (this.projects >= 10 && this.products < 6) {
+			if (this.projects >= 5) {
 				this.adjustCurrency("products", 1);
-				this.adjustCurrency("projects", -10);
+				this.adjustCurrency("projects", -5);
 				this.updateRates();
+			}
+		},
+
+		managerWork() {
+			while (this.managerProjectProgress > 60) {
+				if (this.productivity >= 10 && this.projects + this.products < 15) {
+					this.adjustCurrency("projects", 1);
+					this.adjustCurrency("productivity", -10);
+					this.updateRates();
+				}
+				this.adjustCurrency("managerProjectProgress", -60);
+			}
+
+			while (this.managerProductProgress > 300) {
+				if (this.projects >= 5) {
+					this.adjustCurrency("products", 1);
+					this.adjustCurrency("projects", -5);
+					this.updateRates();
+				}
+				this.adjustCurrency("managerProductProgress", -300);
 			}
 		},
 
 		fireLowestWorker() {
 			if (this.interns > 0) {
-				this.adjustCurrency("interns", -1);
-				this.updateRates();
+				fireIntern();
 			} else if (this.employees > 0) {
-				this.adjustCurrency("employees", -1);
-				this.updateRates();
+				fireEmployee();
 			}
 		},
 
@@ -282,9 +326,35 @@ export default {
 			this.updateRates();
 		},
 
+		fireIntern() {
+			if (this.interns > 0) {
+				this.adjustCurrency("interns", -1);
+				this.updateRates();
+			}
+		},
+
 		hireEmployee() {
 			this.adjustCurrency("employees", 1);
 			this.updateRates();
+		},
+
+		fireEmployee() {
+			if (this.employees > 0) {
+				this.adjustCurrency("employees", -1);
+				this.updateRates();
+			}
+		},
+
+		hireManager() {
+			this.adjustCurrency("managers", 1);
+			this.updateRates();
+		},
+
+		fireManager() {
+			if (this.managers > 0) {
+				this.adjustCurrency("managers", -1);
+				this.updateRates();
+			}
 		},
 
 		formatNumber(num) {
@@ -325,6 +395,7 @@ export default {
 
 		gameTick() {
 			this.tick();
+			this.managerWork();
 			this.checkUnlocks();
 			if (this.money < 0) {
 				this.fireLowestWorker();
@@ -494,7 +565,15 @@ export default {
 	text-align: center;
 	padding: 0px;
 	clear: none;
+}
+
+.worker-gain > div > button {
 	cursor: pointer;
+	background-color: lightskyblue;
+	margin-top: 4px;
+	width: 50px;
+	border: 0px;
+	border-radius: 3px;
 }
 
 .worker-gain > div:nth-child(2) {

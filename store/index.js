@@ -1,5 +1,5 @@
 export const state = () => ({
-	VERSION: "0.5.4",
+	VERSION: "0.5.2",
 	debug: true,
 	player: {
 		lastUpdated: null,
@@ -29,6 +29,11 @@ export const state = () => ({
 
 		employeesUnlocked: false,
 		employees: 0,
+
+		managersUnlocked: false,
+		managers: 0,
+		managerProjectProgress: 0,
+		managerProductProgress: 0,
 	},
 });
 
@@ -55,6 +60,8 @@ export const mutations = {
 			state.player.time += state.player.timePerSecond * delSeconds;
 			state.player.productivity += state.player.productivityPerSecond * delSeconds;
 			state.player.money += state.player.moneyPerSecond * delSeconds;
+			state.player.managerProjectProgress += state.player.managers * delSeconds;
+			state.player.managerProductProgress += state.player.managers * delSeconds;
 		}
 		state.player.lastUpdated = curTime;
 	},
@@ -73,7 +80,7 @@ export const mutations = {
 			state.player.projectsUnlocked = true;
 		}
 		// Products
-		if (!state.player.productsUnlocked && state.player.projects >= 10) {
+		if (!state.player.productsUnlocked && state.player.projects >= 5) {
 			state.player.productsUnlocked = true;
 		}
 		// Interns
@@ -83,6 +90,10 @@ export const mutations = {
 		// Employees
 		if (!state.player.employeesUnlocked && state.player.products >= 2) {
 			state.player.employeesUnlocked = true;
+		}
+		// Managers
+		if (!state.player.managersUnlocked && state.player.products >= 3) {
+			state.player.managersUnlocked = true;
 		}
 	},
 
@@ -134,6 +145,11 @@ export const mutations = {
 
 			employeesUnlocked: false,
 			employees: 0,
+
+			managersUnlocked: false,
+			managers: 0,
+			managerProjectProgress: 0,
+			managerProductProgress: 0,
 		};
 	},
 };

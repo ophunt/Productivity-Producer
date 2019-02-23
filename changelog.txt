@@ -1,17 +1,29 @@
-CHANGELOG
+# CHANGELOG #
 
-v0.5.1
-Added empty slots to display limit of projects/products
-Added more gradual reveal to early currencies
+## v0.5.2
 
-v0.5
-Added interns and employees
+-Added managers
 
-v0.4
-Added Products
+-Updated look of employees
 
-v0.3.1
-Fixed formatting of projects
+## v0.5.1
 
-v0.3 and before
-Implemented basics of everything up through projects
+-Added empty slots to display limit of projects/products
+
+-Added more gradual reveal to early currencies
+
+### v0.5
+
+-Added interns and employees
+
+### v0.4
+
+-Added Products
+
+## v0.3.1
+
+-Fixed formatting of projects
+
+### v0.3 and before
+
+-Implemented basics of everything up through projects
