@@ -1,5 +1,5 @@
 export const state = () => ({
-	VERSION: "0.5.2",
+	VERSION: "0.5.3",
 	debug: true,
 	player: {
 		lastUpdated: null,
@@ -34,6 +34,9 @@ export const state = () => ({
 		managers: 0,
 		managerProjectProgress: 0,
 		managerProductProgress: 0,
+
+		analystsUnlocked: false,
+		analysts: 0,
 	},
 });
 
@@ -95,6 +98,10 @@ export const mutations = {
 		if (!state.player.managersUnlocked && state.player.products >= 3) {
 			state.player.managersUnlocked = true;
 		}
+		// Analysts
+		if (!state.player.analystsUnlocked && state.player.products >= 4) {
+			state.player.analystsUnlocked = true;
+		}
 	},
 
 	load (state) {
@@ -150,6 +157,9 @@ export const mutations = {
 			managers: 0,
 			managerProjectProgress: 0,
 			managerProductProgress: 0,
+
+			analystsUnlocked: false,
+			analysts: 0,
 		};
 	},
 };

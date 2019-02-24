@@ -1,5 +1,11 @@
 # CHANGELOG #
 
+## v0.5.3
+
+-Added analysts
+
+-Improved tooltips
+
 ## v0.5.2
 
 -Added managers
