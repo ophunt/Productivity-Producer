@@ -1,43 +1,50 @@
+const defaultPlayer = {
+	lastUpdated: null,
+
+	effort: 0,
+	effortPerSecond: 0,
+
+	timeUnlocked: false,
+	time: 0,
+	timePerSecond: 0,
+
+	productivityUnlocked: false,
+	productivity: 0,
+	productivityPerSecond: 0,
+
+	money: 0,
+	moneyPerSecond: 0,
+
+	projectsUnlocked: false,
+	projects: 0,
+
+	productsUnlocked: false,
+	products: 0,
+
+	internsUnlocked: false,
+	interns: 0,
+
+	employeesUnlocked: false,
+	employees: 0,
+
+	managersUnlocked: false,
+	managers: 0,
+	managerProjectProgress: 0,
+	managerProductProgress: 0,
+
+	analystsUnlocked: false,
+	analysts: 0,
+
+	salespeopleUnlocked: false,
+	salespeople: 0,
+	salespeopleProjectProgress: 0,
+	salespeopleProductProgress: 0,
+};
+
 export const state = () => ({
-	VERSION: "0.5.3",
+	VERSION: "0.5.4",
 	debug: true,
-	player: {
-		lastUpdated: null,
-
-		effort: 0,
-		effortPerSecond: 0,
-
-		timeUnlocked: false,
-		time: 0,
-		timePerSecond: 0,
-
-		productivityUnlocked: false,
-		productivity: 0,
-		productivityPerSecond: 0,
-
-		money: 0,
-		moneyPerSecond: 0,
-
-		projectsUnlocked: false,
-		projects: 0,
-
-		productsUnlocked: false,
-		products: 0,
-
-		internsUnlocked: false,
-		interns: 0,
-
-		employeesUnlocked: false,
-		employees: 0,
-
-		managersUnlocked: false,
-		managers: 0,
-		managerProjectProgress: 0,
-		managerProductProgress: 0,
-
-		analystsUnlocked: false,
-		analysts: 0,
-	},
+	player: defaultPlayer,
 });
 
 export const mutations = {
@@ -65,6 +72,8 @@ export const mutations = {
 			state.player.money += state.player.moneyPerSecond * delSeconds;
 			state.player.managerProjectProgress += state.player.managers * delSeconds;
 			state.player.managerProductProgress += state.player.managers * delSeconds;
+			state.player.salespeopleProjectProgress += state.player.salespeople * delSeconds;
+			state.player.salespeopleProductProgress += state.player.salespeople * delSeconds;
 		}
 		state.player.lastUpdated = curTime;
 	},
@@ -102,6 +111,10 @@ export const mutations = {
 		if (!state.player.analystsUnlocked && state.player.products >= 4) {
 			state.player.analystsUnlocked = true;
 		}
+		// Salespeople
+		if (!state.player.salespeopleUnlocked && state.player.products >= 5) {
+			state.player.salespeopleUnlocked = true;
+		}
 	},
 
 	load (state) {
@@ -124,42 +137,6 @@ export const mutations = {
 	},
 
 	resetState (state) {
-		state.player = {
-			lastUpdated: null,
-
-			effort: 0,
-			effortPerSecond: 0,
-
-			timeUnlocked: false,
-			time: 0,
-			timePerSecond: 0,
-
-			productivityUnlocked: false,
-			productivity: 0,
-			productivityPerSecond: 0,
-
-			money: 0,
-			moneyPerSecond: 0,
-
-			projectsUnlocked: false,
-			projects: 0,
-
-			productsUnlocked: false,
-			products: 0,
-
-			internsUnlocked: false,
-			interns: 0,
-
-			employeesUnlocked: false,
-			employees: 0,
-
-			managersUnlocked: false,
-			managers: 0,
-			managerProjectProgress: 0,
-			managerProductProgress: 0,
-
-			analystsUnlocked: false,
-			analysts: 0,
-		};
+		state.player = defaultPlayer;
 	},
 };

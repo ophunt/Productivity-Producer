@@ -15,13 +15,14 @@
 				class="currency-inner"
 				v-on:click="effortClick()"
 				v-b-tooltip.hover.html title="<b>Gain Effort</b>">
+					<p></p>
 					<p>
 						Effort:<br>{{ formatNumber(effort) }}
 					</p>
 					<p v-if="analysts >= 1"
-					v-bind:class="{ positiveIncome: effortPerSecond > 0,
-									   negativeIncome: effortPerSecond < 0 }">
-						{{ formatNumber(effortPerSecond) }} /s
+					v-bind:class="{ positiveIncome: approximateEffortPerSecond > 0,
+									negativeIncome: approximateEffortPerSecond < 0 }">
+						{{ formatNumber(approximateEffortPerSecond) }} /s
 					</p>
 				</div>
 			</div>
@@ -32,13 +33,14 @@
 					class="currency-inner"
 					v-on:click="timeClick()"
 					v-b-tooltip.hover.html title="<b>Gain Time</b>">
+						<p></p>
 						<p>
 							Time:<br>{{ formatNumber(time) }}
 						</p>
 						<p v-if="analysts >= 2"
-						v-bind:class="{ positiveIncome: timePerSecond > 0,
-										   negativeIncome: timePerSecond < 0 }">
-							{{ formatNumber(timePerSecond) }} /s
+						v-bind:class="{ positiveIncome: approximateTimePerSecond > 0,
+										negativeIncome: approximateTimePerSecond < 0 }">
+							{{ formatNumber(approximateTimePerSecond) }} /s
 						</p>
 					</div>
 				</div>
@@ -51,13 +53,14 @@
 					v-on:click="makeProductivity()"
 					v-b-tooltip.hover.html title="<b>Gain Productivity</b><br>
 												  Earns 1 Effort per second<br>Costs 10 Effort and 1 Time">
+						<p></p>
 						<p>
 							Productivity:<br>{{ formatNumber(productivity) }}
 						</p>
 						<p v-if="analysts >= 3"
-						v-bind:class="{ positiveIncome: productivityPerSecond > 0,
-										   negativeIncome: productivityPerSecond < 0 }">
-							{{ formatNumber(productivityPerSecond) }} /s
+						v-bind:class="{ positiveIncome: approximateProductivityPerSecond > 0,
+										negativeIncome: approximateProductivityPerSecond < 0 }">
+							{{ formatNumber(approximateProductivityPerSecond) }} /s
 						</p>
 					</div>
 				</div>
@@ -69,13 +72,14 @@
 					class="currency-inner" id="money-inner"
 					v-b-tooltip.hover.html title="<b>Money</b> is earned<br>from Projects<br>
 												  If you run out,<br>workers will be fired">
+						<p></p>
 						<p>
 							Money:<br>{{ formatNumber(money) }}
 						</p>
 						<p v-if="analysts >= 4"
-						v-bind:class="{ positiveIncome: moneyPerSecond > 0,
-										   negativeIncome: moneyPerSecond < 0 }">
-							{{ formatNumber(moneyPerSecond) }} /s
+						v-bind:class="{ positiveIncome: approximateMoneyPerSecond > 0,
+										negativeIncome: approximateMoneyPerSecond < 0 }">
+							{{ formatNumber(approximateMoneyPerSecond) }} /s
 						</p>
 					</div>
 				</div>
@@ -157,7 +161,7 @@
 					<div
 					id="manager-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Manager</b><br>Attempts to make<br>a Project every minute<br>
-												  and to make a Products<br>every 5 minutes<br>
+												  and to make a Product<br>every 5 minutes<br>
 												  Costs 1 Money per Second">
 					<div class="add-manager">
 						<button v-on:click="hireManager()">+</button>
@@ -176,13 +180,34 @@
 					id="analyst-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Analyst</b><br>Each one measures<br>
 												  net income for<br>a single currency<br>
-												  Costs 1 Money per Second">
+												  Costs 2.50 Money per Second">
 					<div class="add-analyst">
 						<button v-on:click="hireAnalyst()">+</button>
 					</div>
 					<div>Analysts: {{ analysts }}</div>
 					<div class="remove-analyst">
 						<button v-on:click="fireAnalyst()">-</button>
+					</div>
+					</div>
+				</div>
+			</transition>
+
+			<transition name="fade">
+				<div class="salesperson-wrapper" v-if="salespeopleUnlocked">
+					<div
+					id="salesperson-gain" class="worker-gain"
+					v-b-tooltip.hover.html title="<b>Hire Salesperson</b><br>
+												  Attempts to sell a<br>
+												  Project ($300) every minute<br>
+												  and sell a Product ($1500)<br>
+												  every 5 minutes<br>
+												  Costs 1 Money per Second">
+					<div class="add-salesperson">
+						<button v-on:click="hireSalesperson()">+</button>
+					</div>
+					<div>Salespeople: {{ salespeople }}</div>
+					<div class="remove-salesperson">
+						<button v-on:click="fireSalesperson()">-</button>
 					</div>
 					</div>
 				</div>
@@ -227,7 +252,27 @@ export default {
 			managerProductProgress: state => state.player.managerProductProgress,
 			analystsUnlocked: state => state.player.analystsUnlocked,
 			analysts: state => state.player.analysts,
+			salespeopleUnlocked: state => state.player.salespeopleUnlocked,
+			salespeople: state => state.player.salespeople,
+			salespeopleProjectProgress: state => state.player.salespeopleProjectProgress,
+			salespeopleProductProgress: state => state.player.salespeopleProductProgress,
 		}),
+
+		approximateEffortPerSecond: function() {
+			return this.effortPerSecond + this.managers * -1;
+		},
+
+		approximateTimePerSecond: function() {
+			return this.timePerSecond + this.managers * -0.1;
+		},
+
+		approximateProductivityPerSecond: function() {
+			return this.productivityPerSecond + this.managers * 0.1;
+		},
+
+		approximateMoneyPerSecond: function() {
+			return this.moneyPerSecond + this.salespeople * 10;
+		},
 
 	},
 
@@ -278,7 +323,11 @@ export default {
 
 		calcMoneyPerSecond() {
 			let income = this.projects * 1 + this.products * 5;
-			let costs = this.interns * 1 + this.employees * 1 + this.managers * 1;
+			let costs = this.interns * 1
+					  + this.employees * 1
+					  + this.managers * 1
+					  + this.analysts * 2.5
+					  + this.salespeople * 1;
 			return income - costs;
 		},
 
@@ -305,7 +354,7 @@ export default {
 				this.updateRates();
 			} else {
 				this.tempTooltip("Not enough resources!",
-					"Gain Productivity<br>Earns 1 Effort per second<br>Costs 10 Effort and 1 Time",
+					"<b>Gain Productivity</b><br>Earns 1 Effort per second<br>Costs 10 Effort and 1 Time",
 					"productivity-inner",
 					1000);
 			}
@@ -318,12 +367,12 @@ export default {
 				this.updateRates();
 			} else if (this.projects + this.products < 15) {
 				this.tempTooltip("Not enough resources!",
-					"Create new Project for 10 Productivity (15 max)",
+					"<b>Create new Project</b> for 10 Productivity (15 max)",
 					"project-maker",
 					1000);
 			} else {
 				this.tempTooltip("Max projects reached!",
-					"Create new Project for 10 Productivity (15 max)",
+					"<b>Create new Project</b> for 10 Productivity (15 max)",
 					"project-maker",
 					1000);
 			}
@@ -357,6 +406,26 @@ export default {
 			}
 		},
 
+		salespeopleWork() {
+			while (this.salespeopleProjectProgress > 60) {
+				if (this.projects > 0) {
+					this.adjustCurrency("projects", -1);
+					this.adjustCurrency("money", 300);
+					this.updateRates();
+				}
+				this.adjustCurrency("salespeopleProjectProgress", -60);
+			}
+
+			while (this.salespeopleProductProgress > 300) {
+				if (this.products > 0) {
+					this.adjustCurrency("products", -1);
+					this.adjustCurrency("money", 1500);
+					this.updateRates();
+				}
+				this.adjustCurrency("salespeopleProductProgress", -300);
+			}
+		},
+
 		fireLowestWorker() {
 			if (this.interns > 0) {
 				this.fireIntern();
@@ -366,6 +435,8 @@ export default {
 				this.fireManger();
 			} else if (this.analysts > 0) {
 				this.fireAnalyst();
+			} else if (this.salespeople > 0) {
+				this.fireSalesperson();
 			}
 		},
 
@@ -417,6 +488,18 @@ export default {
 			}
 		},
 
+		hireSalesperson() {
+			this.adjustCurrency("salespeople", 1);
+			this.updateRates();
+		},
+
+		fireSalesperson() {
+			if (this.salespeople > 0) {
+				this.adjustCurrency("salespeople", -1);
+				this.updateRates();
+			}
+		},
+
 		formatNumber(num) {
 			return numberformat.formatShort(num, {maxSmall: "100", sigFigs: 3});
 		},
@@ -456,6 +539,7 @@ export default {
 		gameTick() {
 			this.tick();
 			this.managerWork();
+			this.salespeopleWork();
 			this.checkUnlocks();
 			if (this.money < 0) {
 				while (this.moneyPerSecond < 0) {

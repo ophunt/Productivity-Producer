@@ -1,5 +1,11 @@
 # CHANGELOG #
 
+## v0.5.4
+
+-Added salespeople
+
+-Fixed formatting
+
 ## v0.5.3
 
 -Added analysts
