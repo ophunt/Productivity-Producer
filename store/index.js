@@ -11,6 +11,7 @@ const defaultPlayer = {
 	productivityUnlocked: false,
 	productivity: 0,
 	productivityPerSecond: 0,
+	productivityCrippled: false,
 
 	money: 0,
 	moneyPerSecond: 0,
@@ -42,7 +43,7 @@ const defaultPlayer = {
 };
 
 export const state = () => ({
-	VERSION: "0.5.4",
+	VERSION: "0.5.5",
 	debug: true,
 	player: defaultPlayer,
 });
@@ -86,6 +87,12 @@ export const mutations = {
 		// Productivity
 		if (!state.player.productivityUnlocked && state.player.time >= 1) {
 			state.player.productivityUnlocked = true;
+		}
+		// Crippled productivity
+		if (!state.player.productivityCrippled && (state.player.effort < 0 || state.player.time < 0)) {
+			state.player.productivityCrippled = true;
+		} else if (state.player.productivityCrippled && !(state.player.effort < 0 || state.player.time < 0)) {
+			state.player.productivityCrippled = false;
 		}
 		// Projects
 		if (!state.player.projectsUnlocked && state.player.productivity >= 10) {

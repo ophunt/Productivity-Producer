@@ -50,6 +50,7 @@
 				<div class="productivity currency" v-if="productivityUnlocked">
 					<div
 					class="currency-inner" id="productivity-inner"
+					v-bind:class="{ redBackground: productivityCrippled }"
 					v-on:click="makeProductivity()"
 					v-b-tooltip.hover.html title="<b>Gain Productivity</b><br>
 												  Earns 1 Effort per second<br>Costs 10 Effort and 1 Time">
@@ -236,6 +237,7 @@ export default {
 			productivityUnlocked: state => state.player.productivityUnlocked,
 			productivity: state => state.player.productivity,
 			productivityPerSecond: state => state.player.productivityPerSecond,
+			productivityCrippled: state => state.player.productivityCrippled,
 			money: state => state.player.money,
 			moneyPerSecond: state => state.player.moneyPerSecond,
 			projectsUnlocked: state => state.player.projectsUnlocked,
@@ -318,7 +320,7 @@ export default {
 		calcProductivityPerSecond() {
 			let income = this.employees * 0.1;
 			let costs = 0;
-			return income - costs;
+			return income * (this.productivityCrippled ? 0 : 1) - costs;
 		},
 
 		calcMoneyPerSecond() {
@@ -633,6 +635,10 @@ export default {
 
 .negativeIncome {
 	color: red;
+}
+
+.redBackground {
+	background-color: red;
 }
 
 .money-fader {
