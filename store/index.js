@@ -40,10 +40,13 @@ const defaultPlayer = {
 	salespeople: 0,
 	salespeopleProjectProgress: 0,
 	salespeopleProductProgress: 0,
+
+	executivesUnlocked: false,
+	executives: 0,
 };
 
 export const state = () => ({
-	VERSION: "0.5.5",
+	VERSION: "0.5.6",
 	debug: true,
 	player: defaultPlayer,
 });
@@ -121,6 +124,10 @@ export const mutations = {
 		// Salespeople
 		if (!state.player.salespeopleUnlocked && state.player.products >= 5) {
 			state.player.salespeopleUnlocked = true;
+		}
+		// Executives
+		if (!state.player.executivesUnlocked && state.player.money >= 100000) {
+			state.player.executivesUnlocked = true;
 		}
 	},
 

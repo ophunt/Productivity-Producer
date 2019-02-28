@@ -199,8 +199,8 @@
 					id="salesperson-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Salesperson</b><br>
 												  Attempts to sell a<br>
-												  Project ($300) every minute<br>
-												  and sell a Product ($1500)<br>
+												  Project ($400) every minute<br>
+												  and sell a Product ($2000)<br>
 												  every 5 minutes<br>
 												  Costs 1 Money per Second">
 					<div class="add-salesperson">
@@ -209,6 +209,23 @@
 					<div>Salespeople: {{ salespeople }}</div>
 					<div class="remove-salesperson">
 						<button v-on:click="fireSalesperson()">-</button>
+					</div>
+					</div>
+				</div>
+			</transition>
+
+			<transition name="fade">
+				<div class="executives-wrapper" v-if="executivesUnlocked">
+					<div
+					id="executive-gain" class="worker-gain"
+					v-b-tooltip.hover.html title="<b>Hire Executive</b><br>
+												  ">
+					<div class="add-executive">
+						<button v-on:click="hireExecutive()">+</button>
+					</div>
+					<div>Executives: {{ executives }}</div>
+					<div class="remove-executive">
+						<button v-on:click="fireExecutive()">-</button>
 					</div>
 					</div>
 				</div>
@@ -258,6 +275,8 @@ export default {
 			salespeople: state => state.player.salespeople,
 			salespeopleProjectProgress: state => state.player.salespeopleProjectProgress,
 			salespeopleProductProgress: state => state.player.salespeopleProductProgress,
+			executivesUnlocked: state => state.player.executivesUnlocked,
+			executives: state => state.player.executives,
 		}),
 
 		approximateEffortPerSecond: function() {
@@ -269,11 +288,11 @@ export default {
 		},
 
 		approximateProductivityPerSecond: function() {
-			return this.productivityPerSecond + this.managers * 0.1;
+			return this.productivityPerSecond + this.managers * -1/6;
 		},
 
 		approximateMoneyPerSecond: function() {
-			return this.moneyPerSecond + this.salespeople * 10;
+			return this.moneyPerSecond + this.salespeople * 400/60 * 2;
 		},
 
 	},
@@ -412,7 +431,7 @@ export default {
 			while (this.salespeopleProjectProgress > 60) {
 				if (this.projects > 0) {
 					this.adjustCurrency("projects", -1);
-					this.adjustCurrency("money", 300);
+					this.adjustCurrency("money", 400);
 					this.updateRates();
 				}
 				this.adjustCurrency("salespeopleProjectProgress", -60);
@@ -421,7 +440,7 @@ export default {
 			while (this.salespeopleProductProgress > 300) {
 				if (this.products > 0) {
 					this.adjustCurrency("products", -1);
-					this.adjustCurrency("money", 1500);
+					this.adjustCurrency("money", 2000);
 					this.updateRates();
 				}
 				this.adjustCurrency("salespeopleProductProgress", -300);
@@ -434,7 +453,7 @@ export default {
 			} else if (this.employees > 0) {
 				this.fireEmployee();
 			} else if (this.managers > 0) {
-				this.fireManger();
+				this.fireManager();
 			} else if (this.analysts > 0) {
 				this.fireAnalyst();
 			} else if (this.salespeople > 0) {
@@ -498,6 +517,18 @@ export default {
 		fireSalesperson() {
 			if (this.salespeople > 0) {
 				this.adjustCurrency("salespeople", -1);
+				this.updateRates();
+			}
+		},
+
+		hireExecutive() {
+			this.adjustCurrency("executives", 1);
+			this.updateRates();
+		},
+
+		fireExecutive() {
+			if (this.executives > 0) {
+				this.adjustCurrency("executives", -1);
 				this.updateRates();
 			}
 		},
@@ -709,15 +740,15 @@ export default {
 
 .workers > * {
 	float: left;
-	margin-bottom: 5px;
-	margin-right: 5px;
+	margin-bottom: 4px;
+	margin-right: 4px;
 }
 
 .worker-gain {
 	display: table;
 	background-color: aqua;
 	border: 1px solid black;
-	width: 125px;
+	width: 133px;
 	height: 100px;
 }
 
@@ -740,6 +771,30 @@ export default {
 .worker-gain > div:nth-child(2) {
 	vertical-align: middle;
 	cursor: default;
+}
+
+#intern-gain {
+	background-color: rgba(0, 0, 255, 0.05);
+}
+
+#employee-gain {
+	background-color: rgba(0, 0, 255, 0.20);
+}
+
+#manager-gain {
+	background-color: rgba(0, 0, 255, 0.35);
+}
+
+#analyst-gain {
+	background-color: rgba(0, 0, 255, 0.5);
+}
+
+#salesperson-gain {
+	background-color: rgba(0, 0, 255, 0.65);
+}
+
+#executive-gain {
+	background-color: rgba(0, 0, 255, 0.8);
 }
 
 .fade-enter-active, .fade-leave-active {
