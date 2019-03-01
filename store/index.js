@@ -54,7 +54,7 @@ const defaultPlayer = {
 };
 
 export const state = () => ({
-	VERSION: "0.5.7.1",
+	VERSION: "0.5.7.2",
 	debug: true,
 	player: defaultPlayer,
 });

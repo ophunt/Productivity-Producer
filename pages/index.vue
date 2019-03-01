@@ -221,7 +221,8 @@
 					v-b-tooltip.hover.html title="<b>Hire Executive</b><br>
 												  Allows you to hire in groups<br>
 												  Each one increases your<br>
-												  group hire limit by one">
+												  group hire limit by one<br>
+												  Costs 5 Money per second">
 					<div class="add-executive">
 						<button v-on:click="hireExecutive()">+</button>
 					</div>
@@ -468,7 +469,7 @@ export default {
 					  + this.managers * 1
 					  + this.analysts * 2.5
 					  + this.salespeople * 1
-					  + this.executives * 1;
+					  + this.executives * 5;
 			return income - costs;
 		},
 
