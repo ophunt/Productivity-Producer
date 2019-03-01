@@ -467,7 +467,8 @@ export default {
 					  + this.employees * 1
 					  + this.managers * 1
 					  + this.analysts * 2.5
-					  + this.salespeople * 1;
+					  + this.salespeople * 1
+					  + this.executives * 1;
 			return income - costs;
 		},
 
@@ -576,6 +577,8 @@ export default {
 			} else if (this.analysts > 0) {
 				this.fireAnalyst();
 			} else if (this.salespeople > 0) {
+				this.fireSalesperson();
+			} else if (this.executives > 0) {
 				this.fireSalesperson();
 			}
 		},

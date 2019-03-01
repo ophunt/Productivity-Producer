@@ -1,5 +1,9 @@
 # CHANGELOG #
 
+# v0.5.7.1
+
+-Added cost to executives
+
 ## v0.5.7
 
 -Added executive functionality (group buy)
