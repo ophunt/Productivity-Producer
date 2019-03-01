@@ -219,7 +219,9 @@
 					<div
 					id="executive-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Executive</b><br>
-												  ">
+												  Allows you to hire in groups<br>
+												  Each one increases your<br>
+												  group hire limit by one">
 					<div class="add-executive">
 						<button v-on:click="hireExecutive()">+</button>
 					</div>
@@ -228,6 +230,46 @@
 						<button v-on:click="fireExecutive()">-</button>
 					</div>
 					</div>
+				</div>
+			</transition>
+		</div>
+
+		<div class="group-hire-inputs">
+			<transition name="fade">
+				<div class="group-inputs-wrapper" v-if="groupsUnlocked">
+					<input type="number" min="0" value="0" step="1" placeholder="0"
+						   id="intern-group" v-model.number="internGroupSize">
+					<input type="number" min="0" value="0" step="1" placeholder="0"
+						   id="employee-group" v-model.number="employeeGroupSize">
+					<input type="number" min="0" value="0" step="1" placeholder="0"
+						   id="manager-group" v-model.number="managerGroupSize">
+					<input type="number" min="0" value="0" step="1" placeholder="0"
+						   id="analyst-group" v-model.number="analystGroupSize">
+					<input type="number" min="0" value="0" step="1" placeholder="0"
+						   id="salesperson-group" v-model.number="salespersonGroupSize">
+					<input type="number" min="0" value="0" step="1" placeholder="0"
+						   id="executive-group" v-model.number="executiveGroupSize">
+				</div>
+			</transition>
+		</div>
+
+		<div class="group-hire-buttons">
+			<transition name="fade">
+				<div class="group-button-wrapper" v-if="groupsUnlocked">
+					<button v-on:click="groupHireInterns()">Group Hire Interns</button>
+					<button v-on:click="groupHireEmployees()">Group Hire Employees</button>
+					<button v-on:click="groupHireManagers()">Group Hire Managers</button>
+					<button v-on:click="groupHireAnalysts()">Group Hire Analysts</button>
+					<button v-on:click="groupHireSalespeople()">Group Hire Salespeople</button>
+					<button v-on:click="groupHireExecutives()">Group Hire Executives</button>
+				</div>
+			</transition>
+		</div>
+
+		<div class="group-hire-all-button">
+			<transition name="fade">
+				<div class="group-hire-all-button-wrapper" v-if="groupsUnlocked">
+					<button v-on:click="hireAllGroup()">Group Hire All Workers</button>
 				</div>
 			</transition>
 		</div>
@@ -277,22 +319,99 @@ export default {
 			salespeopleProductProgress: state => state.player.salespeopleProductProgress,
 			executivesUnlocked: state => state.player.executivesUnlocked,
 			executives: state => state.player.executives,
+			groupsUnlocked: state => state.player.groupsUnlocked,
 		}),
 
+		internGroupSize: {
+			get () {
+				return this.$store.state.player.internGroupSize;
+			},
+			set: function (size) {
+				this.$store.commit("setValue", {
+					resource: "internGroupSize",
+					value: Math.floor(size)
+				});
+			}
+		},
+
+		employeeGroupSize: {
+			get () {
+				return this.$store.state.player.employeeGroupSize;
+			},
+			set: function (size) {
+				this.$store.commit("setValue", {
+					resource: "employeeGroupSize",
+					value: Math.floor(size)
+				});
+			}
+		},
+
+		managerGroupSize: {
+			get () {
+				return this.$store.state.player.managerGroupSize;
+			},
+			set: function (size) {
+				this.$store.commit("setValue", {
+					resource: "managerGroupSize",
+					value: Math.floor(size)
+				});
+			}
+		},
+
+		analystGroupSize: {
+			get () {
+				return this.$store.state.player.analystGroupSize;
+			},
+			set: function (size) {
+				this.$store.commit("setValue", {
+					resource: "analystGroupSize",
+					value: Math.floor(size)
+				});
+			}
+		},
+
+		salespersonGroupSize: {
+			get () {
+				return this.$store.state.player.salespersonGroupSize;
+			},
+			set: function (size) {
+				this.$store.commit("setValue", {
+					resource: "salespersonGroupSize",
+					value: Math.floor(size)
+				});
+			}
+		},
+
+		executiveGroupSize: {
+			get () {
+				return this.$store.state.player.executiveGroupSize;
+			},
+			set: function (size) {
+				this.$store.commit("setValue", {
+					resource: "executiveGroupSize",
+					value: Math.floor(size)
+				});
+			}
+		},
+
 		approximateEffortPerSecond: function() {
-			return this.effortPerSecond + this.managers * -1;
+			let approx = this.effortPerSecond;
+			return Math.floor(100*approx)/100;
 		},
 
 		approximateTimePerSecond: function() {
-			return this.timePerSecond + this.managers * -0.1;
+			let approx = this.timePerSecond;
+			return Math.floor(100*approx)/100;
 		},
 
 		approximateProductivityPerSecond: function() {
-			return this.productivityPerSecond + this.managers * -1/6;
+			let approx = this.productivityPerSecond + this.managers * -1/6;
+			return Math.floor(100*approx)/100;
 		},
 
 		approximateMoneyPerSecond: function() {
-			return this.moneyPerSecond + this.salespeople * 400/60 * 2;
+			let approx = this.moneyPerSecond + this.salespeople * 400/60 * 2;
+			return Math.floor(100*approx)/100;
 		},
 
 	},
@@ -331,7 +450,7 @@ export default {
 		},
 
 		calcTimePerSecond() {
-			let income = this.interns * 0.2;
+			let income = this.timeUnlocked + this.interns * 0.2;
 			let costs = this.employees * 0.1;
 			return income - costs;
 		},
@@ -466,6 +585,13 @@ export default {
 			this.updateRates();
 		},
 
+		groupHireInterns() {
+			if (this.internGroupSize <= this.executives) {
+				this.adjustCurrency("interns", this.internGroupSize);
+				this.updateRates();
+			}
+		},
+
 		fireIntern() {
 			if (this.interns > 0) {
 				this.adjustCurrency("interns", -1);
@@ -476,6 +602,13 @@ export default {
 		hireEmployee() {
 			this.adjustCurrency("employees", 1);
 			this.updateRates();
+		},
+
+		groupHireEmployees() {
+			if (this.employeeGroupSize <= this.executives) {
+				this.adjustCurrency("employees", this.employeeGroupSize);
+				this.updateRates();
+			}
 		},
 
 		fireEmployee() {
@@ -490,6 +623,13 @@ export default {
 			this.updateRates();
 		},
 
+		groupHireManagers() {
+			if (this.managerGroupSize <= this.executives) {
+				this.adjustCurrency("managers", this.managerGroupSize);
+				this.updateRates();
+			}
+		},
+
 		fireManager() {
 			if (this.managers > 0) {
 				this.adjustCurrency("managers", -1);
@@ -500,6 +640,13 @@ export default {
 		hireAnalyst() {
 			this.adjustCurrency("analysts", 1);
 			this.updateRates();
+		},
+
+		groupHireAnalysts() {
+			if (this.analystGroupSize <= this.executives) {
+				this.adjustCurrency("analysts", this.analystGroupSize);
+				this.updateRates();
+			}
 		},
 
 		fireAnalyst() {
@@ -514,6 +661,13 @@ export default {
 			this.updateRates();
 		},
 
+		groupHireSalespeople() {
+			if (this.salespersonGroupSize <= this.executives) {
+				this.adjustCurrency("salespeople", this.salespersonGroupSize);
+				this.updateRates();
+			}
+		},
+
 		fireSalesperson() {
 			if (this.salespeople > 0) {
 				this.adjustCurrency("salespeople", -1);
@@ -526,10 +680,29 @@ export default {
 			this.updateRates();
 		},
 
+		groupHireExecutives() {
+			if (this.executiveGroupSize <= this.executives) {
+				this.adjustCurrency("executives", this.executiveGroupSize);
+				this.updateRates();
+			}
+		},
+
 		fireExecutive() {
 			if (this.executives > 0) {
 				this.adjustCurrency("executives", -1);
 				this.updateRates();
+			}
+		},
+
+		hireAllGroup() {
+			if (this.executives >= this.internGroupSize + this.employeeGroupSize + this.managerGroupSize
+								 + this.analystGroupSize + this.salespersonGroupSize + this.executiveGroupSize) {
+				this.groupHireInterns();
+				this.groupHireEmployees();
+				this.groupHireManagers();
+				this.groupHireAnalysts();
+				this.groupHireSalespeople();
+				this.groupHireExecutives();
 			}
 		},
 
@@ -611,7 +784,8 @@ export default {
 }
 
 .app {
-	margin: 0px;
+	width: 825px;
+	margin: auto;
 	margin-bottom: 0px;
 }
 
@@ -795,6 +969,42 @@ export default {
 
 #executive-gain {
 	background-color: rgba(0, 0, 255, 0.8);
+}
+
+.group-hire-inputs {
+	display: block;
+	clear: both;
+	width: 100%;
+	margin: 5px;
+}
+
+.group-inputs-wrapper > * {
+	width: 133px;
+	margin-right: -1px;
+}
+
+.group-hire-buttons {
+	display: block;
+	clear: both;
+	width: 100%;
+	margin: 5px;
+}
+
+.group-button-wrapper > * {
+	width: 133px;
+	margin-right: -1px;
+}
+
+.group-hire-all-button {
+	display: block;
+	clear: both;
+	width: 100%;
+	margin: 5px;
+}
+
+.group-hire-all-button-wrapper > * {
+	width: 818px;
+	margin-right: -1px;
 }
 
 .fade-enter-active, .fade-leave-active {

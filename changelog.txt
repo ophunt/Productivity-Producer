@@ -1,5 +1,11 @@
 # CHANGELOG #
 
+## v0.5.7
+
+-Added executive functionality (group buy)
+-Added base time per second
+-Improved display of currency gains
+
 ## v0.5.6
 
 -Added executives (non-functional)

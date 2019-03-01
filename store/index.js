@@ -43,10 +43,18 @@ const defaultPlayer = {
 
 	executivesUnlocked: false,
 	executives: 0,
+
+	groupsUnlocked: false,
+	internGroupSize: 0,
+	employeeGroupSize: 0,
+	managerGroupSize: 0,
+	analystGroupSize: 0,
+	salespersonGroupSize: 0,
+	executiveGroupSize: 0,
 };
 
 export const state = () => ({
-	VERSION: "0.5.6",
+	VERSION: "0.5.7",
 	debug: true,
 	player: defaultPlayer,
 });
@@ -128,6 +136,10 @@ export const mutations = {
 		// Executives
 		if (!state.player.executivesUnlocked && state.player.money >= 100000) {
 			state.player.executivesUnlocked = true;
+		}
+		// Group buyers
+		if (!state.player.groupsUnlocked && state.player.executives >= 1) {
+			state.player.groupsUnlocked = true;
 		}
 	},
 
