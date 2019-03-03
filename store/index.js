@@ -30,16 +30,16 @@ const defaultPlayer = {
 
 	managersUnlocked: false,
 	managers: 0,
-	managerProjectProgress: 0,
-	managerProductProgress: 0,
+	projectsToMake: 0,
+	productsToMake: 0,
 
 	analystsUnlocked: false,
 	analysts: 0,
 
 	salespeopleUnlocked: false,
 	salespeople: 0,
-	salespeopleProjectProgress: 0,
-	salespeopleProductProgress: 0,
+	projectsToSell: 0,
+	productsToSell: 0,
 
 	executivesUnlocked: false,
 	executives: 0,
@@ -54,7 +54,7 @@ const defaultPlayer = {
 };
 
 export const state = () => ({
-	VERSION: "0.5.8",
+	VERSION: "0.6.dev",
 	debug: true,
 	player: defaultPlayer,
 });
@@ -82,10 +82,10 @@ export const mutations = {
 			state.player.time += state.player.timePerSecond * delSeconds;
 			state.player.productivity += state.player.productivityPerSecond * delSeconds;
 			state.player.money += state.player.moneyPerSecond * delSeconds;
-			state.player.managerProjectProgress += state.player.managers * delSeconds;
-			state.player.managerProductProgress += state.player.managers * delSeconds;
-			state.player.salespeopleProjectProgress += state.player.salespeople * delSeconds;
-			state.player.salespeopleProductProgress += state.player.salespeople * delSeconds;
+			state.player.projectsToMake += state.player.managers * delSeconds / 60;
+			state.player.productsToMake += state.player.managers * delSeconds / 60;
+			state.player.projectsToSell += state.player.salespeople * delSeconds / 300;
+			state.player.productsToSell += state.player.salespeople * delSeconds / 300;
 		}
 		state.player.lastUpdated = curTime;
 	},
