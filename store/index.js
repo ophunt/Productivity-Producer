@@ -83,8 +83,8 @@ export const mutations = {
 			state.player.productivity += state.player.productivityPerSecond * delSeconds;
 			state.player.money += state.player.moneyPerSecond * delSeconds;
 			state.player.projectsToMake += state.player.managers * delSeconds / 60;
-			state.player.productsToMake += state.player.managers * delSeconds / 60;
-			state.player.projectsToSell += state.player.salespeople * delSeconds / 300;
+			state.player.productsToMake += state.player.managers * delSeconds / 300;
+			state.player.projectsToSell += state.player.salespeople * delSeconds / 60;
 			state.player.productsToSell += state.player.salespeople * delSeconds / 300;
 		}
 		state.player.lastUpdated = curTime;

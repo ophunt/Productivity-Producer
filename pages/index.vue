@@ -557,8 +557,12 @@ export default {
 				this.products + makeableProjects
 			));
 
-			let sellableProjects = Math.floor(Math.min(
-				this.projectsToSell, this.projects + makeableProjects - 5 * sellableProducts
+			let sellableProjects = Math.floor(Math.max(
+				0,
+				Math.min(
+					this.projectsToSell,
+					this.projects + makeableProjects - 5 * makeableProducts
+				)
 			));
 
 			let leftoverProjects = makeableProjects - sellableProjects;
