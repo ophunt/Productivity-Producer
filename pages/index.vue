@@ -289,37 +289,50 @@ export default {
 
 		...mapState ({
 			debug: state => state.debug,
+
 			effort: state => state.player.effort,
 			effortPerSecond: state => state.player.effortPerSecond,
+
 			timeUnlocked: state => state.player.timeUnlocked,
 			time: state => state.player.time,
 			timePerSecond: state => state.player.timePerSecond,
+
 			productivityUnlocked: state => state.player.productivityUnlocked,
 			productivity: state => state.player.productivity,
 			productivityPerSecond: state => state.player.productivityPerSecond,
 			productivityCrippled: state => state.player.productivityCrippled,
+
 			money: state => state.player.money,
 			moneyPerSecond: state => state.player.moneyPerSecond,
+
 			projectsUnlocked: state => state.player.projectsUnlocked,
 			projects: state => state.player.projects,
+
 			productsUnlocked: state => state.player.products,
 			products: state => state.player.products,
+
 			internsUnlocked: state => state.player.internsUnlocked,
 			interns: state => state.player.interns,
+
 			employeesUnlocked: state => state.player.employeesUnlocked,
 			employees: state => state.player.employees,
+
 			managersUnlocked: state => state.player.managersUnlocked,
 			managers: state => state.player.managers,
-			managerProjectProgress: state => state.player.managerProjectProgress,
-			managerProductProgress: state => state.player.managerProductProgress,
+			projectsToMake: state => state.player.projectsToMake,
+			productsToMake: state => state.player.productsToMake,
+
 			analystsUnlocked: state => state.player.analystsUnlocked,
 			analysts: state => state.player.analysts,
+
 			salespeopleUnlocked: state => state.player.salespeopleUnlocked,
 			salespeople: state => state.player.salespeople,
-			salespeopleProjectProgress: state => state.player.salespeopleProjectProgress,
-			salespeopleProductProgress: state => state.player.salespeopleProductProgress,
+			projectsToSell: state => state.player.projectsToSell,
+			productsToSell: state => state.player.productsToSell,
+
 			executivesUnlocked: state => state.player.executivesUnlocked,
 			executives: state => state.player.executives,
+
 			groupsUnlocked: state => state.player.groupsUnlocked,
 		}),
 
@@ -528,43 +541,96 @@ export default {
 			}
 		},
 
+		salespeopleManagerWork() {
+			let makeableProjects = Math.floor(Math.min(
+				this.projectsToMake,
+				this.productivity / 10
+			));
+
+			let makeableProducts = Math.floor(Math.min(
+				this.productsToMake,
+				(this.projects + makeableProjects) / 5
+			));
+
+			let sellableProducts = Math.floor(Math.min(
+				this.productsToSell,
+				this.products + makeableProjects
+			));
+
+			let sellableProjects = Math.floor(Math.max(
+				0,
+				Math.min(
+					this.projectsToSell,
+					this.projects + makeableProjects - 5 * makeableProducts
+				)
+			));
+
+			let leftoverProjects = makeableProjects - sellableProjects;
+			let leftoverProducts = makeableProducts - sellableProducts;
+
+			this.adjustCurrency("products", leftoverProducts);
+			this.adjustCurrency("projects", leftoverProjects);
+
+			this.adjustCurrency("money", sellableProducts * 2000);
+			this.adjustCurrency("money", sellableProjects * 400);
+
+			if (this.products > 11) {
+				let refunded = this.products - 11;
+				this.setValue("products", 11);
+				this.adjustCurrency("projects", refunded * 5);
+			}
+
+			if (this.products + this.projects > 15) {
+				let refunded = this.products + this.projects - 15;
+				this.setValue("projects", 15 - this.products);
+				this.adjustCurrency("productivity", refunded * 10);
+			}
+
+			this.setValue("projectsToMake", this.projectsToMake % 1);
+			this.setValue("productsToMake", this.productsToMake % 1);
+			this.setValue("projectsToSell", this.projectsToSell % 1);
+			this.setValue("productsToSell", this.productsToSell % 1);
+
+			this.updateRates();
+		},
+
 		managerWork() {
-			while (this.managerProjectProgress > 60) {
+			while (this.projectsToMake > 1) {
 				if (this.productivity >= 10 && this.projects + this.products < 15) {
 					this.adjustCurrency("projects", 1);
 					this.adjustCurrency("productivity", -10);
 					this.updateRates();
 				}
-				this.adjustCurrency("managerProjectProgress", -60);
+				this.adjustCurrency("projectsToMake", -1);
 			}
 
-			while (this.managerProductProgress > 300) {
+			while (this.productsToMake > 1) {
 				if (this.projects >= 5) {
 					this.adjustCurrency("products", 1);
 					this.adjustCurrency("projects", -5);
 					this.updateRates();
 				}
-				this.adjustCurrency("managerProductProgress", -300);
+				this.adjustCurrency("productsToMake", -1);
 			}
 		},
 
 		salespeopleWork() {
-			while (this.salespeopleProjectProgress > 60) {
+			while (this.projectsToSell > 1) {
 				if (this.projects > 0) {
 					this.adjustCurrency("projects", -1);
 					this.adjustCurrency("money", 400);
 					this.updateRates();
 				}
-				this.adjustCurrency("salespeopleProjectProgress", -60);
+				this.adjustCurrency("projectsToSell", -1);
 			}
 
-			while (this.salespeopleProductProgress > 300) {
+			while (this.productsToSell > 1) {
 				if (this.products > 0) {
 					this.adjustCurrency("products", -1);
 					this.adjustCurrency("money", 2000);
 					this.updateRates();
 				}
-				this.adjustCurrency("salespeopleProductProgress", -300);
+				this.adjustCurrency("productsToSell", -1);
 			}
 		},
 
@@ -748,8 +814,7 @@ export default {
 
 		gameTick() {
 			this.tick();
-			this.managerWork();
-			this.salespeopleWork();
+			this.salespeopleManagerWork();
 			this.checkUnlocks();
 			if (this.money < 0) {
 				while (this.moneyPerSecond < 0) {
