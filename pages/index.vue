@@ -569,7 +569,10 @@ export default {
 			let leftoverProducts = makeableProducts - sellableProducts;
 
 			this.adjustCurrency("products", leftoverProducts);
+			this.adjustCurrency("projects", -5 * makeableProducts);
+
 			this.adjustCurrency("projects", leftoverProjects);
+			this.adjustCurrency("productivity", -10 * makeableProjects);
 
 			this.adjustCurrency("money", sellableProducts * 2000);
 			this.adjustCurrency("money", sellableProjects * 400);
@@ -592,46 +595,6 @@ export default {
 			this.setValue("productsToSell", this.productsToSell % 1);
 
 			this.updateRates();
-		},
-
-		managerWork() {
-			while (this.projectsToMake > 1) {
-				if (this.productivity >= 10 && this.projects + this.products < 15) {
-					this.adjustCurrency("projects", 1);
-					this.adjustCurrency("productivity", -10);
-					this.updateRates();
-				}
-				this.adjustCurrency("projectsToMake", -1);
-			}
-
-			while (this.productsToMake > 1) {
-				if (this.projects >= 5) {
-					this.adjustCurrency("products", 1);
-					this.adjustCurrency("projects", -5);
-					this.updateRates();
-				}
-				this.adjustCurrency("productsToMake", -1);
-			}
-		},
-
-		salespeopleWork() {
-			while (this.projectsToSell > 1) {
-				if (this.projects > 0) {
-					this.adjustCurrency("projects", -1);
-					this.adjustCurrency("money", 400);
-					this.updateRates();
-				}
-				this.adjustCurrency("projectsToSell", -1);
-			}
-
-			while (this.productsToSell > 1) {
-				if (this.products > 0) {
-					this.adjustCurrency("products", -1);
-					this.adjustCurrency("money", 2000);
-					this.updateRates();
-				}
-				this.adjustCurrency("productsToSell", -1);
-			}
 		},
 
 		fireLowestWorker() {
