@@ -568,6 +568,16 @@ export default {
 			let leftoverProjects = makeableProjects - sellableProjects;
 			let leftoverProducts = makeableProducts - sellableProducts;
 
+			console.log("");
+			console.log("prj: " + this.projects);
+			console.log("prd: " + this.products);
+			console.log("mPrj: " + makeableProjects);
+			console.log("mPrd: " + makeableProducts);
+			console.log("sPrj: " + sellableProjects);
+			console.log("sPrd: " + sellableProducts);
+			console.log("lPrj: " + leftoverProjects);
+			console.log("lPrd: " + leftoverProducts);
+
 			this.adjustCurrency("products", leftoverProducts);
 			this.adjustCurrency("projects", -5 * makeableProducts);
 
@@ -577,11 +587,15 @@ export default {
 			this.adjustCurrency("money", sellableProducts * 2000);
 			this.adjustCurrency("money", sellableProjects * 400);
 
+			console.log("A");
+
 			if (this.products > 11) {
 				let refunded = this.products - 11;
 				this.setValue("products", 11);
 				this.adjustCurrency("projects", refunded * 5);
 			}
+
+			console.log("B");
 
 			if (this.products + this.projects > 15) {
 				let refunded = this.products + this.projects - 15;
@@ -589,12 +603,18 @@ export default {
 				this.adjustCurrency("productivity", refunded * 10);
 			}
 
+			console.log("C");
+
 			this.setValue("projectsToMake", this.projectsToMake % 1);
 			this.setValue("productsToMake", this.productsToMake % 1);
 			this.setValue("projectsToSell", this.projectsToSell % 1);
 			this.setValue("productsToSell", this.productsToSell % 1);
 
+			console.log("D");
+
 			this.updateRates();
+
+			console.log("E");
 		},
 
 		fireLowestWorker() {
@@ -786,6 +806,7 @@ export default {
 				}
 			}
 			this.updateRates();
+			console.log("Tick done");
 		}
 
 	},
