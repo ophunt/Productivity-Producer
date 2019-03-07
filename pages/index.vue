@@ -571,6 +571,9 @@ export default {
 			console.log("");
 			console.log("prj: " + this.projects);
 			console.log("prd: " + this.products);
+			console.log("cPrj: " + this.projectsToMake);
+			console.log("cPrd: " + this.productsToMake);
+			console.log("this.products + makeableProjects = " + this.products + makeableProjects);
 			console.log("mPrj: " + makeableProjects);
 			console.log("mPrd: " + makeableProducts);
 			console.log("sPrj: " + sellableProjects);
