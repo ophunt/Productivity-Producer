@@ -554,7 +554,7 @@ export default {
 
 			let sellableProducts = Math.floor(Math.min(
 				this.productsToSell,
-				this.products + makeableProjects
+				this.products + makeableProducts
 			));
 
 			let sellableProjects = Math.floor(Math.max(
