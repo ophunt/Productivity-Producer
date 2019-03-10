@@ -613,6 +613,36 @@ export default {
 			}
 		},
 
+		fireLowestWorkers() {
+			if (this.interns > 0 && this.moneyPerSecond < 0) {
+				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.interns);
+				this.adjustCurrency("interns", -toFire);
+				this.updateRates();
+			} else if (this.employees > 0 && this.moneyPerSecond < 0) {
+				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.employees);
+				this.adjustCurrency("employees", -toFire);
+				this.updateRates();
+			} else if (this.managers > 0 && this.moneyPerSecond < 0) {
+				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.managers);
+				this.adjustCurrency("managers", -toFire);
+				this.updateRates();
+			} else if (this.analysts > 0 && this.moneyPerSecond < 0) {
+				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -2.5), this.analysts);
+				this.adjustCurrency("analysts", -toFire);
+				this.updateRates();
+			} else if (this.salespeople > 0 && this.moneyPerSecond < 0) {
+				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.salespeople);
+				this.adjustCurrency("salespeople", -toFire);
+				this.updateRates();
+			} else if (this.executives > 0 && this.moneyPerSecond < 0) {
+				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -5), this.executives);
+				this.adjustCurrency("executives", -toFire);
+				this.updateRates();
+			}
+
+			this.setValue("money", 0);
+		},
+
 		hireIntern() {
 			this.adjustCurrency("interns", 1);
 			this.updateRates();
@@ -780,10 +810,11 @@ export default {
 			this.salespeopleManagerWork();
 			this.checkUnlocks();
 			if (this.money < 0) {
-				while (this.moneyPerSecond < 0) {
-					this.fireLowestWorker();
-					this.setValue("money", 0);
-				}
+				this.fireLowestWorkers();
+				// while (this.moneyPerSecond < 0) {
+				// 	this.fireLowestWorker();
+				// 	this.setValue("money", 0);
+				// }
 			}
 			this.updateRates();
 		}
