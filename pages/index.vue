@@ -597,22 +597,6 @@ export default {
 			this.updateRates();
 		},
 
-		fireLowestWorker() {
-			if (this.interns > 0) {
-				this.fireIntern();
-			} else if (this.employees > 0) {
-				this.fireEmployee();
-			} else if (this.managers > 0) {
-				this.fireManager();
-			} else if (this.analysts > 0) {
-				this.fireAnalyst();
-			} else if (this.salespeople > 0) {
-				this.fireSalesperson();
-			} else if (this.executives > 0) {
-				this.fireSalesperson();
-			}
-		},
-
 		fireLowestWorkers() {
 			if (this.interns > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.interns);
@@ -811,10 +795,6 @@ export default {
 			this.checkUnlocks();
 			if (this.money < 0) {
 				this.fireLowestWorkers();
-				// while (this.moneyPerSecond < 0) {
-				// 	this.fireLowestWorker();
-				// 	this.setValue("money", 0);
-				// }
 			}
 			this.updateRates();
 		}
