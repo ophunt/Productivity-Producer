@@ -7,6 +7,19 @@
 			<button id="debug-button" v-on:click="debugSet()">Debug Button</button>
 			<input id="debug-resource"><input id="debug-value">
 			<!-- /DEBUG -->
+			<transition name="fade">
+				<button
+				 id="bankrupt-button"
+				 v-on:click="bankruptcy()"
+				 v-if="effort < 0 || time < 0"
+				 v-b-tooltip.hover.html title="<b>Declare Bankruptcy</b><br>
+				 							   Fires all workers<br>
+											   Resets all currencies to 0<br>
+											   Use only in the <i><b>direst<br>
+											   of circumstances</i></b>">
+					Declare Bankruptcy
+				</button>
+			</transition>
 		</div>
 
 		<div class="currencies">
@@ -597,6 +610,23 @@ export default {
 			this.updateRates();
 		},
 
+		bankruptcy() {
+			this.setValue("interns", 0);
+			this.setValue("employees", 0);
+			this.setValue("managers", 0);
+			this.setValue("analysts", 0);
+			this.setValue("salespeople", 0);
+			this.setValue("executives", 0);
+			this.setValue("effort", 0);
+			this.setValue("time", 0);
+			this.setValue("productivity", 0);
+			this.setValue("money", 0);
+			this.setValue("projects", 0);
+			this.setValue("products", 0);
+
+			this.updateRates();
+		},
+
 		fireLowestWorkers() {
 			if (this.interns > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.interns);
@@ -836,6 +866,7 @@ export default {
 	position: absolute;
 	height: 38px;
 	padding-left: 2px;
+	padding-right: 2px;
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -845,6 +876,11 @@ export default {
 
 .footer > * {
 	margin: 2px;
+}
+
+#bankrupt-button {
+	background-color: red;
+	float: right;
 }
 
 .currencies {
