@@ -78,10 +78,27 @@ export const mutations = {
 		if (state.player.lastUpdated) {
 			let deltaTime = curTime - state.player.lastUpdated;
 			let delSeconds = deltaTime / 1000;
-			state.player.effort += state.player.effortPerSecond * delSeconds;
-			state.player.time += state.player.timePerSecond * delSeconds;
-			state.player.productivity += state.player.productivityPerSecond * delSeconds;
-			state.player.money += state.player.moneyPerSecond * delSeconds;
+
+			let effortGained = state.player.effortPerSecond * delSeconds;
+			state.player.effort += effortGained;
+
+			let timeGained = state.player.timePerSecond * delSeconds;
+			state.player.time += timeGained;
+
+			let productivityGained = state.player.productivityPerSecond * delSeconds;
+			state.player.productivity += productivityGained;
+
+			let moneyGained = state.player.moneyPerSecond * delSeconds;
+			state.player.money += moneyGained;
+
+			if (delSeconds > 60) {
+				alert("While you were away, you gained: "
+					+ effortGained + " effort, "
+					+ timeGained + " time, "
+					+ productivityGained + " productivity, and "
+					+ moneyGained + " money.");
+			}
+
 			state.player.projectsToMake += state.player.managers * delSeconds / 60;
 			state.player.productsToMake += state.player.managers * delSeconds / 300;
 			state.player.projectsToSell += state.player.salespeople * delSeconds / 60;
