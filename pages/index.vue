@@ -22,6 +22,12 @@
 			</transition>
 		</div>
 
+		<div>
+			<b-modal id="offline-modal" ref="offlineModal" centered title="Welcome Back!">
+				<p>{{ offlineMessage }}</p>
+			</b-modal>
+		</div>
+
 		<div class="currencies">
 			<div class="effort currency">
 				<div
@@ -302,6 +308,9 @@ export default {
 
 		...mapState ({
 			debug: state => state.debug,
+
+			showOfflineMessage: state => state.player.showOfflineMessage,
+			offlineMessage: state => state.player.offlineMessage,
 
 			effort: state => state.player.effort,
 			effortPerSecond: state => state.player.effortPerSecond,
@@ -827,6 +836,9 @@ export default {
 				this.fireLowestWorkers();
 			}
 			this.updateRates();
+			if (this.showOfflineMessage) {
+				this.$refs.offlineModal.show();
+			}
 		}
 
 	},

@@ -1,6 +1,9 @@
 const defaultPlayer = {
 	lastUpdated: null,
 
+	showOfflineMessage: false,
+	offlineMessage: "",
+
 	effort: 0,
 	effortPerSecond: 0,
 
@@ -54,7 +57,7 @@ const defaultPlayer = {
 };
 
 export const state = () => ({
-	VERSION: "0.6.dev",
+	VERSION: "0.6.dev2",
 	debug: true,
 	player: defaultPlayer,
 });
@@ -92,11 +95,15 @@ export const mutations = {
 			state.player.money += moneyGained;
 
 			if (delSeconds > 60) {
-				alert("While you were away, you gained: "
+				state.player.showOfflineMessage = true;
+				state.player.offlineMessage =
+					"While you were away, you gained: "
 					+ effortGained + " effort, "
 					+ timeGained + " time, "
 					+ productivityGained + " productivity, and "
-					+ moneyGained + " money.");
+					+ moneyGained + " money.";
+			} else {
+				state.player.showOfflineMessage = false;
 			}
 
 			state.player.projectsToMake += state.player.managers * delSeconds / 60;
