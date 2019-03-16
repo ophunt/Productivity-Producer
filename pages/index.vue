@@ -23,7 +23,7 @@
 		</div>
 
 		<div>
-			<b-modal id="offline-modal" ref="offlineModal" centered ok-only="true" title="Welcome Back!">
+			<b-modal id="offline-modal" ref="offlineModal" centered :ok-only="true" title="Welcome Back!">
 				<p>{{ offlineMessage }}</p>
 			</b-modal>
 		</div>
