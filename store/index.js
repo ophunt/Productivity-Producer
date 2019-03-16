@@ -96,12 +96,13 @@ export const mutations = {
 
 			if (delSeconds > 60) {
 				state.player.showOfflineMessage = true;
-				state.player.offlineMessage =
+				state.player.offlineMessage = (
 					"While you were away, you gained: "
 					+ effortGained + " effort, "
 					+ timeGained + " time, "
 					+ productivityGained + " productivity, and "
-					+ moneyGained + " money.";
+					+ moneyGained + " money."
+				);
 			} else {
 				state.player.showOfflineMessage = false;
 			}
