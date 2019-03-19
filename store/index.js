@@ -111,7 +111,7 @@ export const mutations = {
 				state.player.showOfflineMessage = false;
 			}
 
-			state.player.projectsToMake += state.player.managers * delSeconds / 60;
+			state.player.projectsToMake += state.player.managers * delSeconds / 30;
 			state.player.productsToMake += state.player.managers * delSeconds / 300;
 			state.player.projectsToSell += state.player.salespeople * delSeconds / 60;
 			state.player.productsToSell += state.player.salespeople * delSeconds / 300;

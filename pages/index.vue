@@ -180,8 +180,11 @@
 				<div class="manager-wrapper" v-if="managersUnlocked">
 					<div
 					id="manager-gain" class="worker-gain"
-					v-b-tooltip.hover.html title="<b>Hire Manager</b><br>Attempts to make<br>a Project every minute<br>
-												  and to make a Product<br>every 5 minutes<br>
+					v-b-tooltip.hover.html title="<b>Hire Manager</b><br>
+												  Attempts to make<br>
+												  a Project every 30 seconds<br>
+												  and to make a Product<br>
+												  every 5 minutes<br>
 												  Costs 1 Money per Second">
 					<div class="add-manager">
 						<button v-on:click="hireManager()">+</button>
@@ -441,7 +444,7 @@ export default {
 		},
 
 		approximateProductivityPerSecond: function() {
-			let approx = this.productivityPerSecond + this.managers * -1/6;
+			let approx = this.productivityPerSecond + this.managers * -1/3;
 			return Math.floor(100*approx)/100;
 		},
 
