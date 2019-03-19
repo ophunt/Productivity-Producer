@@ -62,6 +62,8 @@ export const state = () => ({
 	player: defaultPlayer,
 });
 
+const formatter = require("swarm-numberformat");
+
 export const mutations = {
 
 	setValue (state, payload) {
@@ -97,11 +99,13 @@ export const mutations = {
 			if (delSeconds > 60) {
 				state.player.showOfflineMessage = true;
 				state.player.offlineMessage = (
-					"While you were away, you gained: "
-					+ effortGained + " effort, "
-					+ timeGained + " time, "
-					+ productivityGained + " productivity, and "
-					+ moneyGained + " money."
+					"While you were away, you gained "
+					+ formatter.format(effortGained, {maxSmall: "100", sigFigs: 3}) + " effort, "
+					+ formatter.format(timeGained, {maxSmall: "100", sigFigs: 3}) + " time, and "
+					+ formatter.format(productivityGained, {maxSmall: "100", sigFigs: 3}) + " productivity, and paid "
+					+ formatter.format(-1*moneyGained, {maxSmall: "100", sigFigs: 3}) + " money in wages. "
+					+ "Your managers and salespeople have kept working though, "
+					+ "so close this and see how they did!"
 				);
 			} else {
 				state.player.showOfflineMessage = false;
