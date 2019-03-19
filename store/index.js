@@ -1,6 +1,9 @@
 const defaultPlayer = {
 	lastUpdated: null,
 
+	showOfflineMessage: false,
+	offlineMessage: "",
+
 	effort: 0,
 	effortPerSecond: 0,
 
@@ -54,10 +57,12 @@ const defaultPlayer = {
 };
 
 export const state = () => ({
-	VERSION: "0.6.dev",
+	VERSION: "0.6.6",
 	debug: true,
 	player: defaultPlayer,
 });
+
+const formatter = require("swarm-numberformat");
 
 export const mutations = {
 
@@ -78,10 +83,34 @@ export const mutations = {
 		if (state.player.lastUpdated) {
 			let deltaTime = curTime - state.player.lastUpdated;
 			let delSeconds = deltaTime / 1000;
-			state.player.effort += state.player.effortPerSecond * delSeconds;
-			state.player.time += state.player.timePerSecond * delSeconds;
-			state.player.productivity += state.player.productivityPerSecond * delSeconds;
-			state.player.money += state.player.moneyPerSecond * delSeconds;
+
+			let effortGained = state.player.effortPerSecond * delSeconds;
+			state.player.effort += effortGained;
+
+			let timeGained = state.player.timePerSecond * delSeconds;
+			state.player.time += timeGained;
+
+			let productivityGained = state.player.productivityPerSecond * delSeconds;
+			state.player.productivity += productivityGained;
+
+			let moneyGained = state.player.moneyPerSecond * delSeconds;
+			state.player.money += moneyGained;
+
+			if (delSeconds > 60) {
+				state.player.showOfflineMessage = true;
+				state.player.offlineMessage = (
+					"While you were away, you gained "
+					+ formatter.format(effortGained, {maxSmall: "100", sigFigs: 3}) + " effort, "
+					+ formatter.format(timeGained, {maxSmall: "100", sigFigs: 3}) + " time, and "
+					+ formatter.format(productivityGained, {maxSmall: "100", sigFigs: 3}) + " productivity, and paid "
+					+ formatter.format(-1*moneyGained, {maxSmall: "100", sigFigs: 3}) + " money in wages. "
+					+ "Your managers and salespeople have kept working though, "
+					+ "so close this and see how they did!"
+				);
+			} else {
+				state.player.showOfflineMessage = false;
+			}
+
 			state.player.projectsToMake += state.player.managers * delSeconds / 30;
 			state.player.productsToMake += state.player.managers * delSeconds / 300;
 			state.player.projectsToSell += state.player.salespeople * delSeconds / 60;
