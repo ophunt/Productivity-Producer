@@ -118,7 +118,7 @@
 					<div
 					class="product"
 					v-for="n in products" :key="n*100"
-					v-b-tooltip.hover.html title="Earns you 10<br>Money per second">
+					v-b-tooltip.hover.html title="Earns you 5<br>Money per second">
 					<p>Product<br>{{ n }}</p>
 					</div>
 					<div
@@ -152,7 +152,7 @@
 												  Costs 1 Money per second">
 					<div class="add-worker"
 					v-on:click="hireIntern()"><button>+</button></div>
-					<div>Interns: {{ interns }}</div>
+					<div>Interns:<br>{{ formatNumber(interns) }}</div>
 					<div class="remove-worker"
 					v-on:click="fireIntern()"><button>-</button></div>
 					</div>
@@ -168,7 +168,7 @@
 					<div class="add-worker">
 						<button v-on:click="hireEmployee()">+</button>
 					</div>
-					<div>Employees: {{ employees }}</div>
+					<div>Employees:<br>{{ formatNumber(employees) }}</div>
 					<div class="remove-worker">
 						<button v-on:click="fireEmployee()">-</button>
 					</div>
@@ -186,11 +186,11 @@
 												  and to make a Product<br>
 												  every 5 minutes<br>
 												  Costs 1 Money per Second">
-					<div class="add-manager">
+					<div class="add-worker">
 						<button v-on:click="hireManager()">+</button>
 					</div>
-					<div>Managers: {{ managers }}</div>
-					<div class="remove-manager">
+					<div>Managers:<br>{{ formatNumber(managers) }}</div>
+					<div class="remove-worker">
 						<button v-on:click="fireManager()">-</button>
 					</div>
 					</div>
@@ -204,11 +204,11 @@
 					v-b-tooltip.hover.html title="<b>Hire Analyst</b><br>Each one measures<br>
 												  net income for<br>a single currency<br>
 												  Costs 2.50 Money per Second">
-					<div class="add-analyst">
+					<div class="add-worker">
 						<button v-on:click="hireAnalyst()">+</button>
 					</div>
-					<div>Analysts: {{ analysts }}</div>
-					<div class="remove-analyst">
+					<div>Analysts:<br>{{ formatNumber(analysts) }}</div>
+					<div class="remove-worker">
 						<button v-on:click="fireAnalyst()">-</button>
 					</div>
 					</div>
@@ -225,11 +225,11 @@
 												  and sell a Product ($2000)<br>
 												  every 5 minutes<br>
 												  Costs 1 Money per Second">
-					<div class="add-salesperson">
+					<div class="add-worker">
 						<button v-on:click="hireSalesperson()">+</button>
 					</div>
-					<div>Salespeople: {{ salespeople }}</div>
-					<div class="remove-salesperson">
+					<div>Salespeople:<br>{{ formatNumber(salespeople) }}</div>
+					<div class="remove-worker">
 						<button v-on:click="fireSalesperson()">-</button>
 					</div>
 					</div>
@@ -245,11 +245,11 @@
 												  Each one increases your<br>
 												  group hire limit by one<br>
 												  Costs 5 Money per second">
-					<div class="add-executive">
+					<div class="add-worker">
 						<button v-on:click="hireExecutive()">+</button>
 					</div>
-					<div>Executives: {{ executives }}</div>
-					<div class="remove-executive">
+					<div>Executives:<br>{{ formatNumber(executives) }}</div>
+					<div class="remove-worker">
 						<button v-on:click="fireExecutive()">-</button>
 					</div>
 					</div>
@@ -796,7 +796,7 @@ export default {
 		},
 
 		formatNumber(num) {
-			return numberformat.formatShort(num, {maxSmall: "100", sigFigs: 3});
+			return numberformat.formatShort(num, {maxSmall: "0", sigFigs: 3});
 		},
 
 		tempTooltip(message, origMessage, elementID, duration) {
@@ -1039,6 +1039,11 @@ export default {
 .worker-gain > div:nth-child(2) {
 	vertical-align: middle;
 	cursor: default;
+}
+
+.remove-worker > * {
+	margin-top: 0px;
+	margin-bottom: 4px;
 }
 
 #intern-gain {
