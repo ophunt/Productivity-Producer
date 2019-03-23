@@ -145,7 +145,7 @@
 
 		<div class="workers">
 			<transition name="fade">
-				<div class="intern-wrapper" v-if="internsUnlocked">
+				<div class="intern-wrapper" id="intern" v-if="internsUnlocked">
 					<div
 					id="intern-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Intern</b><br>Earns 0.2 Time per second<br>
@@ -160,7 +160,7 @@
 			</transition>
 
 			<transition name="fade">
-				<div class="employee-wrapper" v-if="employeesUnlocked">
+				<div class="employee-wrapper" id="employee" v-if="employeesUnlocked">
 					<div
 					id="employee-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Employee</b><br>Earns 0.1 Productivity<br>per second<br>
@@ -177,7 +177,7 @@
 			</transition>
 
 			<transition name="fade">
-				<div class="manager-wrapper" v-if="managersUnlocked">
+				<div class="manager-wrapper" id="manager" v-if="managersUnlocked">
 					<div
 					id="manager-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Manager</b><br>
@@ -198,7 +198,7 @@
 			</transition>
 
 			<transition name="fade">
-				<div class="analyst-wrapper" v-if="analystsUnlocked">
+				<div class="analyst-wrapper" id="analyst" v-if="analystsUnlocked">
 					<div
 					id="analyst-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Analyst</b><br>Each one measures<br>
@@ -216,7 +216,7 @@
 			</transition>
 
 			<transition name="fade">
-				<div class="salesperson-wrapper" v-if="salespeopleUnlocked">
+				<div class="salesperson-wrapper" id="salesperson" v-if="salespeopleUnlocked">
 					<div
 					id="salesperson-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Salesperson</b><br>
@@ -237,7 +237,7 @@
 			</transition>
 
 			<transition name="fade">
-				<div class="executives-wrapper" v-if="executivesUnlocked">
+				<div class="executives-wrapper" id="executive" v-if="executivesUnlocked">
 					<div
 					id="executive-gain" class="worker-gain"
 					v-b-tooltip.hover.html title="<b>Hire Executive</b><br>
@@ -643,26 +643,32 @@ export default {
 			if (this.interns > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.interns);
 				this.adjustCurrency("interns", -toFire);
+				this.flashRed("intern");
 				this.updateRates();
 			} else if (this.employees > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.employees);
 				this.adjustCurrency("employees", -toFire);
+				this.flashRed("employee");
 				this.updateRates();
 			} else if (this.managers > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.managers);
 				this.adjustCurrency("managers", -toFire);
+				this.flashRed("manager");
 				this.updateRates();
 			} else if (this.analysts > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -2.5), this.analysts);
 				this.adjustCurrency("analysts", -toFire);
+				this.flashRed("analyst");
 				this.updateRates();
 			} else if (this.salespeople > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.salespeople);
 				this.adjustCurrency("salespeople", -toFire);
+				this.flashRed("salesperson");
 				this.updateRates();
 			} else if (this.executives > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -5), this.executives);
 				this.adjustCurrency("executives", -toFire);
+				this.flashRed("executive");
 				this.updateRates();
 			}
 
@@ -684,6 +690,7 @@ export default {
 		fireIntern() {
 			if (this.interns > 0) {
 				this.adjustCurrency("interns", -1);
+				this.flashRed("intern");
 				this.updateRates();
 			}
 		},
@@ -703,6 +710,7 @@ export default {
 		fireEmployee() {
 			if (this.employees > 0) {
 				this.adjustCurrency("employees", -1);
+				this.flashRed("employee");
 				this.updateRates();
 			}
 		},
@@ -722,6 +730,7 @@ export default {
 		fireManager() {
 			if (this.managers > 0) {
 				this.adjustCurrency("managers", -1);
+				this.flashRed("manager");
 				this.updateRates();
 			}
 		},
@@ -741,6 +750,7 @@ export default {
 		fireAnalyst() {
 			if (this.analysts > 0) {
 				this.adjustCurrency("analysts", -1);
+				this.flashRed("analyst");
 				this.updateRates();
 			}
 		},
@@ -760,6 +770,7 @@ export default {
 		fireSalesperson() {
 			if (this.salespeople > 0) {
 				this.adjustCurrency("salespeople", -1);
+				this.flashRed("salesperson");
 				this.updateRates();
 			}
 		},
@@ -779,6 +790,7 @@ export default {
 		fireExecutive() {
 			if (this.executives > 0) {
 				this.adjustCurrency("executives", -1);
+				this.flashRed("executive");
 				this.updateRates();
 			}
 		},
@@ -811,6 +823,13 @@ export default {
 					this.$root.$emit("bv::show::tooltip", elementID);
 				}
 			}, duration);
+		},
+
+		flashRed(elementID) {
+			let elem = document.getElementById(elementID);
+			elem.classList.remove("flash-red");
+			elem.classList.add("flash-red");
+			setTimeout(() => elem.classList.remove("flash-red"), 500);
 		},
 
 		save() {
@@ -1014,7 +1033,6 @@ export default {
 
 .worker-gain {
 	display: table;
-	background-color: aqua;
 	border: 1px solid black;
 	width: 133px;
 	height: 100px;
@@ -1046,27 +1064,27 @@ export default {
 	margin-bottom: 4px;
 }
 
-#intern-gain {
+#intern {
 	background-color: rgba(0, 0, 255, 0.05);
 }
 
-#employee-gain {
+#employee {
 	background-color: rgba(0, 0, 255, 0.20);
 }
 
-#manager-gain {
+#manager {
 	background-color: rgba(0, 0, 255, 0.35);
 }
 
-#analyst-gain {
+#analyst {
 	background-color: rgba(0, 0, 255, 0.5);
 }
 
-#salesperson-gain {
+#salesperson {
 	background-color: rgba(0, 0, 255, 0.65);
 }
 
-#executive-gain {
+#executive {
 	background-color: rgba(0, 0, 255, 0.8);
 }
 
@@ -1112,6 +1130,17 @@ export default {
 
 .fade-enter, .fade-leave-to {
 	opacity: 0;
+}
+
+.flash-red {
+	animation: flash-red 0.5s 1;
+	animation-fill-mode: both;
+}
+
+@keyframes flash-red {
+	33% {
+		background-color: red;
+	}
 }
 
 </style>
