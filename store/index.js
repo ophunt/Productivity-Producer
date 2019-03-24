@@ -102,9 +102,10 @@ export const mutations = {
 					"While you were away, you gained "
 					+ formatter.format(effortGained, {maxSmall: "100", sigFigs: 3}) + " effort, "
 					+ formatter.format(timeGained, {maxSmall: "100", sigFigs: 3}) + " time, and "
-					+ formatter.format(productivityGained, {maxSmall: "100", sigFigs: 3}) + " productivity, and paid "
-					+ formatter.format(-1*moneyGained, {maxSmall: "100", sigFigs: 3}) + " money in wages. "
-					+ "Your managers and salespeople have kept working though, "
+					+ formatter.format(productivityGained, {maxSmall: "100", sigFigs: 3}) + " productivity, and "
+					+ formatter.format(moneyGained, {maxSmall: "100", sigFigs: 3}) + " money "
+					+ "between projects/products and wages. "
+					+ "Your managers and salespeople have kept working too, "
 					+ "so close this and see how they did!"
 				);
 			} else {
