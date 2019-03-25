@@ -64,6 +64,10 @@ export const state = () => ({
 
 const formatter = require("swarm-numberformat");
 
+var formatNumber = function(num) {
+	return formatter.format(num,  {maxSmall: "0", sigFigs: 3});
+};
+
 export const mutations = {
 
 	setValue (state, payload) {
@@ -100,11 +104,12 @@ export const mutations = {
 				state.player.showOfflineMessage = true;
 				state.player.offlineMessage = (
 					"While you were away, you gained "
-					+ formatter.format(effortGained, {maxSmall: "100", sigFigs: 3}) + " effort, "
-					+ formatter.format(timeGained, {maxSmall: "100", sigFigs: 3}) + " time, and "
-					+ formatter.format(productivityGained, {maxSmall: "100", sigFigs: 3}) + " productivity, and paid "
-					+ formatter.format(-1*moneyGained, {maxSmall: "100", sigFigs: 3}) + " money in wages. "
-					+ "Your managers and salespeople have kept working though, "
+					+ formatNumber(effortGained) + " effort, "
+					+ formatNumber(timeGained) + " time, and "
+					+ formatNumber(productivityGained) + " productivity, and "
+					+ formatNumber(moneyGained) + " money "
+					+ "between projects/products and wages. "
+					+ "Your managers and salespeople have kept working too, "
 					+ "so close this and see how they did!"
 				);
 			} else {
