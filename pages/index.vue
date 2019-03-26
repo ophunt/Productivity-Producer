@@ -145,26 +145,23 @@
 
 		<div class="workers">
 			<transition name="fade">
-				<div class="intern-wrapper" id="intern" v-if="internsUnlocked">
-					<div
-					id="intern-gain" class="worker-gain"
-					v-b-tooltip.hover.html title="<b>Hire Intern</b><br>Earns 0.2 Time per second<br>
-												  Costs 1 Money per second">
-					<div class="add-worker"
-					v-on:click="hireIntern()"><button>+</button></div>
+				<div class="worker-wrapper" id="intern" v-if="internsUnlocked"
+				v-b-tooltip.hover.html title="<b>Intern</b><br>Earns 0.2 Time per second<br>
+											  Costs 1 Money per second">
+					<div class="add-worker">
+						<button v-on:click="hireIntern()">+</button>
+					</div>
 					<div>Interns:<br>{{ formatNumber(interns) }}</div>
-					<div class="remove-worker"
-					v-on:click="fireIntern()"><button>-</button></div>
+					<div class="remove-worker">
+						<button v-on:click="fireIntern()">-</button>
 					</div>
 				</div>
 			</transition>
 
 			<transition name="fade">
-				<div class="employee-wrapper" id="employee" v-if="employeesUnlocked">
-					<div
-					id="employee-gain" class="worker-gain"
-					v-b-tooltip.hover.html title="<b>Hire Employee</b><br>Earns 0.1 Productivity<br>per second<br>
-												  Costs 1 Effort, 0.1 Time,<br>and 1 Money per second">
+				<div class="worker-wrapper" id="employee" v-if="employeesUnlocked"
+				v-b-tooltip.hover.html title="<b>Employee</b><br>Earns 0.1 Productivity<br>per second<br>
+											  Costs 1 Effort, 0.1 Time,<br>and 1 Money per second">
 					<div class="add-worker">
 						<button v-on:click="hireEmployee()">+</button>
 					</div>
@@ -172,20 +169,17 @@
 					<div class="remove-worker">
 						<button v-on:click="fireEmployee()">-</button>
 					</div>
-					</div>
 				</div>
 			</transition>
 
 			<transition name="fade">
-				<div class="manager-wrapper" id="manager" v-if="managersUnlocked">
-					<div
-					id="manager-gain" class="worker-gain"
-					v-b-tooltip.hover.html title="<b>Hire Manager</b><br>
-												  Attempts to make<br>
-												  a Project every 30 seconds<br>
-												  and to make a Product<br>
-												  every 5 minutes<br>
-												  Costs 1 Money per Second">
+				<div class="worker-wrapper" id="manager" v-if="managersUnlocked"
+				v-b-tooltip.hover.html title="<b>Manager</b><br>
+											  Attempts to make<br>
+											  a Project every 30 seconds<br>
+											  and to make a Product<br>
+											  every 5 minutes<br>
+											  Costs 1 Money per Second">
 					<div class="add-worker">
 						<button v-on:click="hireManager()">+</button>
 					</div>
@@ -193,17 +187,14 @@
 					<div class="remove-worker">
 						<button v-on:click="fireManager()">-</button>
 					</div>
-					</div>
 				</div>
 			</transition>
 
 			<transition name="fade">
-				<div class="analyst-wrapper" id="analyst" v-if="analystsUnlocked">
-					<div
-					id="analyst-gain" class="worker-gain"
-					v-b-tooltip.hover.html title="<b>Hire Analyst</b><br>Each one measures<br>
-												  net income for<br>a single currency<br>
-												  Costs 2.50 Money per Second">
+				<div class="worker-wrapper" id="analyst" v-if="analystsUnlocked"
+				v-b-tooltip.hover.html title="<b>Analyst</b><br>Each one measures<br>
+											  net income for<br>a single currency<br>
+											  Costs 2.50 Money per Second">
 					<div class="add-worker">
 						<button v-on:click="hireAnalyst()">+</button>
 					</div>
@@ -211,20 +202,17 @@
 					<div class="remove-worker">
 						<button v-on:click="fireAnalyst()">-</button>
 					</div>
-					</div>
 				</div>
 			</transition>
 
 			<transition name="fade">
-				<div class="salesperson-wrapper" id="salesperson" v-if="salespeopleUnlocked">
-					<div
-					id="salesperson-gain" class="worker-gain"
-					v-b-tooltip.hover.html title="<b>Hire Salesperson</b><br>
-												  Attempts to sell a<br>
-												  Project ($400) every minute<br>
-												  and sell a Product ($2000)<br>
-												  every 5 minutes<br>
-												  Costs 1 Money per Second">
+				<div class="worker-wrapper" id="salesperson" v-if="salespeopleUnlocked"
+				v-b-tooltip.hover.html title="<b>Salesperson</b><br>
+											  Attempts to sell a<br>
+											  Project ($400) every minute<br>
+											  and sell a Product ($2000)<br>
+											  every 5 minutes<br>
+											  Costs 1 Money per Second">
 					<div class="add-worker">
 						<button v-on:click="hireSalesperson()">+</button>
 					</div>
@@ -232,26 +220,22 @@
 					<div class="remove-worker">
 						<button v-on:click="fireSalesperson()">-</button>
 					</div>
-					</div>
 				</div>
 			</transition>
 
 			<transition name="fade">
-				<div class="executives-wrapper" id="executive" v-if="executivesUnlocked">
-					<div
-					id="executive-gain" class="worker-gain"
-					v-b-tooltip.hover.html title="<b>Hire Executive</b><br>
-												  Allows you to hire in groups<br>
-												  Each one increases your<br>
-												  group hire limit by one<br>
-												  Costs 5 Money per second">
+				<div class="worker-wrapper" id="executive" v-if="executivesUnlocked"
+				v-b-tooltip.hover.html title="<b>Executive</b><br>
+											  Allows you to hire in groups<br>
+											  Each one increases your<br>
+											  group hire limit by one<br>
+											  Costs 5 Money per second">
 					<div class="add-worker">
 						<button v-on:click="hireExecutive()">+</button>
 					</div>
 					<div>Executives:<br>{{ formatNumber(executives) }}</div>
 					<div class="remove-worker">
 						<button v-on:click="fireExecutive()">-</button>
-					</div>
 					</div>
 				</div>
 			</transition>
@@ -1031,21 +1015,21 @@ export default {
 	margin-right: 4px;
 }
 
-.worker-gain {
+.worker-wrapper {
 	display: table;
 	border: 1px solid black;
 	width: 133px;
 	height: 100px;
 }
 
-.worker-gain > div {
+.worker-wrapper > div {
 	display: table-row;
 	text-align: center;
 	padding: 0px;
 	clear: none;
 }
 
-.worker-gain > div > button {
+.worker-wrapper > div > button {
 	cursor: pointer;
 	background-color: lightskyblue;
 	margin-top: 4px;
@@ -1054,7 +1038,7 @@ export default {
 	border-radius: 3px;
 }
 
-.worker-gain > div:nth-child(2) {
+.worker-wrapper > div:nth-child(2) {
 	vertical-align: middle;
 	cursor: default;
 }
