@@ -156,6 +156,10 @@
 						<button v-on:click="fireIntern()">-</button>
 					</div>
 				</div>
+
+				<div class="worker-hint" id="intern" v-if="projectsUnlocked && !internsUnlocked">
+					<div>Reach<br>1 Product<br>to Unlock<br>******s</div>
+				</div>
 			</transition>
 
 			<transition name="fade">
@@ -169,6 +173,10 @@
 					<div class="remove-worker">
 						<button v-on:click="fireEmployee()">-</button>
 					</div>
+				</div>
+
+				<div class="worker-hint" id="employee" v-if="internsUnlocked && !employeesUnlocked">
+					<div>Reach<br>2 Products<br>to Unlock<br>********s</div>
 				</div>
 			</transition>
 
@@ -188,6 +196,10 @@
 						<button v-on:click="fireManager()">-</button>
 					</div>
 				</div>
+
+				<div class="worker-hint" id="manager" v-if="employeesUnlocked && !managersUnlocked">
+					<div>Reach<br>3 Products<br>to Unlock<br>*******s</div>
+				</div>
 			</transition>
 
 			<transition name="fade">
@@ -202,6 +214,10 @@
 					<div class="remove-worker">
 						<button v-on:click="fireAnalyst()">-</button>
 					</div>
+				</div>
+
+				<div class="worker-hint" id="analyst" v-if="managersUnlocked && !analystsUnlocked">
+					<div>Reach<br>4 Products<br>to Unlock<br>*******s</div>
 				</div>
 			</transition>
 
@@ -221,6 +237,10 @@
 						<button v-on:click="fireSalesperson()">-</button>
 					</div>
 				</div>
+
+				<div class="worker-hint" id="salesperson" v-if="analystsUnlocked && !salespeopleUnlocked">
+					<div>Reach<br>5 Products<br>to Unlock<br>***********</div>
+				</div>
 			</transition>
 
 			<transition name="fade">
@@ -237,6 +257,10 @@
 					<div class="remove-worker">
 						<button v-on:click="fireExecutive()">-</button>
 					</div>
+				</div>
+
+				<div class="worker-hint" id="executive" v-if="salespeopleUnlocked && !executivesUnlocked">
+					<div>Reach<br>100k Money<br>to Unlock<br>*********s</div>
 				</div>
 			</transition>
 		</div>
@@ -1019,7 +1043,7 @@ export default {
 	display: table;
 	border: 1px solid black;
 	width: 133px;
-	height: 100px;
+	height: 120px;
 }
 
 .worker-wrapper > div {
@@ -1046,6 +1070,21 @@ export default {
 .remove-worker > * {
 	margin-top: 0px;
 	margin-bottom: 4px;
+}
+
+.worker-hint {
+	display: table;
+	border: 1px solid black;
+	width: 133px;
+	height: 120px;
+}
+
+.worker-hint > div {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	padding: 0px;
+	clear: none;
 }
 
 #intern {
