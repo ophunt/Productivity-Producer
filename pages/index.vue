@@ -3,10 +3,10 @@
 		<div class="footer">
 			<button id="save-button" v-on:click="save()">Save</button>
 			<button id="load-button" v-on:click="load()">Load</button>
-			<!-- DEBUG -->
-			<button id="debug-button" v-on:click="debugSet()">Debug Button</button>
-			<input id="debug-resource"><input id="debug-value">
-			<!-- /DEBUG -->
+			<div class="debug" v-if="deployEnv !== 'GH-PAGES'">
+				<button id="debug-button" v-on:click="debugSet()">Debug Button</button>
+				<input id="debug-resource"><input id="debug-value">
+			</div>
 			<transition name="fade">
 				<button
 				 id="bankrupt-button"
@@ -459,6 +459,10 @@ export default {
 		approximateMoneyPerSecond: function() {
 			let approx = this.moneyPerSecond + this.salespeople * 400/60 * 2;
 			return Math.floor(100*approx)/100;
+		},
+
+		deployEnv: function() {
+			return process.env.DEPLOY_ENV;
 		},
 
 	},
@@ -918,6 +922,10 @@ export default {
 
 .footer > * {
 	margin: 2px;
+}
+
+.debug {
+	display: inline-block;
 }
 
 #bankrupt-button {
