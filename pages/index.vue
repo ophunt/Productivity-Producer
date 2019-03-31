@@ -3,7 +3,7 @@
 		<div class="footer">
 			<button id="save-button" v-on:click="save()">Save</button>
 			<button id="load-button" v-on:click="load()">Load</button>
-			<div class="debug" v-if="deployEnv !== 'GH-PAGES'">
+			<div class="debug" v-if="debug">
 				<button id="debug-button" v-on:click="debugSet()">Debug Button</button>
 				<input id="debug-resource"><input id="debug-value">
 			</div>
