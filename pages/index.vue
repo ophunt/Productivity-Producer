@@ -144,8 +144,8 @@
 		</div>
 
 		<div class="workers">
-			<transition name="fade">
-				<div class="worker-wrapper" id="intern" v-if="internsUnlocked"
+			<transition name="fade" mode="out-in">
+				<div class="worker-wrapper" id="intern" key="intern" v-if="internsUnlocked"
 				v-b-tooltip.hover.html title="<b>Intern</b><br>Earns 0.2 Time per second<br>
 											  Costs 1 Money per second">
 					<div class="add-worker">
@@ -157,13 +157,13 @@
 					</div>
 				</div>
 
-				<div class="worker-hint" id="intern" v-if="projectsUnlocked && !internsUnlocked">
+				<div class="worker-hint" id="intern" key="intern-hint" v-if="projects >= 1 && !internsUnlocked">
 					<div>Reach<br>1 Product<br>to Unlock<br>******s</div>
 				</div>
 			</transition>
 
-			<transition name="fade">
-				<div class="worker-wrapper" id="employee" v-if="employeesUnlocked"
+			<transition name="fade" mode="out-in">
+				<div class="worker-wrapper" id="employee" key="employee" v-if="employeesUnlocked"
 				v-b-tooltip.hover.html title="<b>Employee</b><br>Earns 0.1 Productivity<br>per second<br>
 											  Costs 1 Effort, 0.1 Time,<br>and 1 Money per second">
 					<div class="add-worker">
@@ -175,13 +175,14 @@
 					</div>
 				</div>
 
-				<div class="worker-hint" id="employee" v-if="internsUnlocked && !employeesUnlocked">
+				<div class="worker-hint" id="employee" key="employee-hint"
+				v-if="internsUnlocked && !employeesUnlocked">
 					<div>Reach<br>2 Products<br>to Unlock<br>********s</div>
 				</div>
 			</transition>
 
-			<transition name="fade">
-				<div class="worker-wrapper" id="manager" v-if="managersUnlocked"
+			<transition name="fade" mode="out-in">
+				<div class="worker-wrapper" id="manager" key="manager" v-if="managersUnlocked"
 				v-b-tooltip.hover.html title="<b>Manager</b><br>
 											  Attempts to make<br>
 											  a Project every 30 seconds<br>
@@ -197,13 +198,14 @@
 					</div>
 				</div>
 
-				<div class="worker-hint" id="manager" v-if="employeesUnlocked && !managersUnlocked">
+				<div class="worker-hint" id="manager" key="manager-hint"
+				v-if="employeesUnlocked && !managersUnlocked">
 					<div>Reach<br>3 Products<br>to Unlock<br>*******s</div>
 				</div>
 			</transition>
 
-			<transition name="fade">
-				<div class="worker-wrapper" id="analyst" v-if="analystsUnlocked"
+			<transition name="fade" mode="out-in">
+				<div class="worker-wrapper" id="analyst" key="analyst" v-if="analystsUnlocked"
 				v-b-tooltip.hover.html title="<b>Analyst</b><br>Each one measures<br>
 											  net income for<br>a single currency<br>
 											  Costs 2.50 Money per Second">
@@ -216,13 +218,14 @@
 					</div>
 				</div>
 
-				<div class="worker-hint" id="analyst" v-if="managersUnlocked && !analystsUnlocked">
+				<div class="worker-hint" id="analyst" key="analyst-hint"
+				v-if="managersUnlocked && !analystsUnlocked">
 					<div>Reach<br>4 Products<br>to Unlock<br>*******s</div>
 				</div>
 			</transition>
 
-			<transition name="fade">
-				<div class="worker-wrapper" id="salesperson" v-if="salespeopleUnlocked"
+			<transition name="fade" mode="out-in">
+				<div class="worker-wrapper" id="salesperson" key="salesperson" v-if="salespeopleUnlocked"
 				v-b-tooltip.hover.html title="<b>Salesperson</b><br>
 											  Attempts to sell a<br>
 											  Project ($400) every minute<br>
@@ -238,13 +241,14 @@
 					</div>
 				</div>
 
-				<div class="worker-hint" id="salesperson" v-if="analystsUnlocked && !salespeopleUnlocked">
+				<div class="worker-hint" id="salesperson" key="salesperson-hint"
+				v-if="analystsUnlocked && !salespeopleUnlocked">
 					<div>Reach<br>5 Products<br>to Unlock<br>***********</div>
 				</div>
 			</transition>
 
-			<transition name="fade">
-				<div class="worker-wrapper" id="executive" v-if="executivesUnlocked"
+			<transition name="fade" mode="out-in">
+				<div class="worker-wrapper" id="executive" key="executive" v-if="executivesUnlocked"
 				v-b-tooltip.hover.html title="<b>Executive</b><br>
 											  Allows you to hire in groups<br>
 											  Each one increases your<br>
@@ -259,7 +263,8 @@
 					</div>
 				</div>
 
-				<div class="worker-hint" id="executive" v-if="salespeopleUnlocked && !executivesUnlocked">
+				<div class="worker-hint" id="executive" key="executive-hint"
+				v-if="salespeopleUnlocked && !executivesUnlocked">
 					<div>Reach<br>100k Money<br>to Unlock<br>*********s</div>
 				</div>
 			</transition>
