@@ -50,8 +50,7 @@
 				<div class="time currency" v-if="timeUnlocked">
 					<div
 					class="currency-inner"
-					v-on:click="timeClick()"
-					v-b-tooltip.hover.html title="<b>Gain Time</b>">
+					v-b-tooltip.hover.html title="<b>Time</b><br>Earned over time">
 						<p></p>
 						<p>
 							Time:<br>{{ formatNumber(time) }}
