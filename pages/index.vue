@@ -1,26 +1,6 @@
 <template>
 	<div class="app">
-		<div class="footer">
-			<button id="save-button" v-on:click="save()">Save</button>
-			<button id="load-button" v-on:click="load()">Load</button>
-			<div class="debug" v-if="debug">
-				<button id="debug-button" v-on:click="debugSet()">Debug Button</button>
-				<input id="debug-resource"><input id="debug-value">
-			</div>
-			<transition name="fade">
-				<button
-				 id="bankrupt-button"
-				 v-on:click="bankruptcy()"
-				 v-if="effort < 0 || time < 0"
-				 v-b-tooltip.hover.html title="<b>Declare Bankruptcy</b><br>
-				 							   Fires all workers<br>
-											   Resets all currencies to 0<br>
-											   Use only in the <i><b>direst<br>
-											   of circumstances</i></b>">
-					Declare Bankruptcy
-				</button>
-			</transition>
-		</div>
+		<My-Footer />
 
 		<div>
 			<b-modal id="offline-modal" ref="offlineModal" centered :ok-only="true" title="Welcome Back!">
@@ -314,10 +294,15 @@
 <script>
 
 import { mapState, mapMutations } from "vuex";
+import MyFooter from "~/components/MyFooter.vue";
+
 const numberformat = require("swarm-numberformat");
 
 export default {
-	components: {},
+
+	components: {
+		MyFooter
+	},
 
 	computed: {
 
@@ -638,23 +623,6 @@ export default {
 			this.updateRates();
 		},
 
-		bankruptcy() {
-			this.setValue("interns", 0);
-			this.setValue("employees", 0);
-			this.setValue("managers", 0);
-			this.setValue("analysts", 0);
-			this.setValue("salespeople", 0);
-			this.setValue("executives", 0);
-			this.setValue("effort", 0);
-			this.setValue("time", 0);
-			this.setValue("productivity", 0);
-			this.setValue("money", 0);
-			this.setValue("projects", 0);
-			this.setValue("products", 0);
-
-			this.updateRates();
-		},
-
 		fireLowestWorkers() {
 			if (this.interns > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.interns);
@@ -858,14 +826,6 @@ export default {
 			this.$store.commit("load");
 		},
 
-		debugSet() {
-			let res = document.getElementById("debug-resource").value;
-			let val = parseInt(document.getElementById("debug-value").value);
-			console.log(res);
-			console.log(val);
-			this.setValue(res, val);
-		},
-
 		gameTick() {
 			this.tick();
 			this.salespeopleManagerWork();
@@ -910,22 +870,6 @@ export default {
 	width: 825px;
 	margin: auto;
 	margin-bottom: 0px;
-}
-
-.footer {
-	position: absolute;
-	height: 38px;
-	padding-left: 2px;
-	padding-right: 2px;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	border: 1px solid black;
-	background-color: lightskyblue;
-}
-
-.footer > * {
-	margin: 2px;
 }
 
 .debug {
