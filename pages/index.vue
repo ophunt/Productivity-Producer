@@ -523,10 +523,6 @@ export default {
 			this.adjustCurrency("effort", 1);
 		},
 
-		timeClick() {
-			this.adjustCurrency("time", 1);
-		},
-
 		makeProductivity() {
 			if (this.effort >= 10 && this.time >= 1) {
 				this.adjustCurrency("effort", -10);
