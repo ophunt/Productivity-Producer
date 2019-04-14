@@ -2,11 +2,7 @@
 	<div class="app">
 		<My-Footer />
 
-		<div>
-			<b-modal id="offline-modal" ref="offlineModal" centered :ok-only="true" title="Welcome Back!">
-				<p>{{ offlineMessage }}</p>
-			</b-modal>
-		</div>
+		<OfflineModal />
 
 		<div class="currencies">
 			<div class="effort currency">
@@ -295,13 +291,15 @@
 
 import { mapState, mapMutations } from "vuex";
 import MyFooter from "~/components/MyFooter.vue";
+import OfflineModal from "~/components/OfflineModal.vue";
 
 const numberformat = require("swarm-numberformat");
 
 export default {
 
 	components: {
-		MyFooter
+		MyFooter,
+		OfflineModal
 	},
 
 	computed: {
@@ -831,7 +829,7 @@ export default {
 			}
 			this.updateRates();
 			if (this.showOfflineMessage) {
-				this.$refs.offlineModal.show();
+				this.$root.$emit("showOfflineModal");
 			}
 		}
 
