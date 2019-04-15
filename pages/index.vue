@@ -245,24 +245,7 @@
 			</transition>
 		</div>
 
-		<div class="group-hire-inputs">
-			<transition name="fade">
-				<div class="group-inputs-wrapper" v-if="groupsUnlocked">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="intern-group" v-model.number="internGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="employee-group" v-model.number="employeeGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="manager-group" v-model.number="managerGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="analyst-group" v-model.number="analystGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="salesperson-group" v-model.number="salespersonGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="executive-group" v-model.number="executiveGroupSize">
-				</div>
-			</transition>
-		</div>
+		<GroupHireInputs />
 
 		<GroupHireButtons />
 	</div>
@@ -273,6 +256,7 @@
 import { mapState, mapMutations } from "vuex";
 import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
+import GroupHireInputs from "~/components/GroupHireInputs.vue";
 import GroupHireButtons from "~/components/GroupHireButtons.vue";
 
 const numberformat = require("swarm-numberformat");
@@ -282,6 +266,7 @@ export default {
 	components: {
 		MyFooter,
 		OfflineModal,
+		GroupHireInputs,
 		GroupHireButtons
 	},
 
@@ -988,18 +973,6 @@ export default {
 
 #executive {
 	background-color: rgba(0, 0, 255, 0.8);
-}
-
-.group-hire-inputs {
-	display: block;
-	clear: both;
-	width: 100%;
-	margin: 5px;
-}
-
-.group-inputs-wrapper > * {
-	width: 133px;
-	margin-right: -1px;
 }
 
 .fade-enter-active, .fade-leave-active {
