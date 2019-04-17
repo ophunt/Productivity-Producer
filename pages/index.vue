@@ -1,32 +1,8 @@
 <template>
 	<div class="app">
-		<div class="footer">
-			<button id="save-button" v-on:click="save()">Save</button>
-			<button id="load-button" v-on:click="load()">Load</button>
-			<div class="debug" v-if="debug">
-				<button id="debug-button" v-on:click="debugSet()">Debug Button</button>
-				<input id="debug-resource"><input id="debug-value">
-			</div>
-			<transition name="fade">
-				<button
-				 id="bankrupt-button"
-				 v-on:click="bankruptcy()"
-				 v-if="effort < 0 || time < 0"
-				 v-b-tooltip.hover.html title="<b>Declare Bankruptcy</b><br>
-				 							   Fires all workers<br>
-											   Resets all currencies to 0<br>
-											   Use only in the <i><b>direst<br>
-											   of circumstances</i></b>">
-					Declare Bankruptcy
-				</button>
-			</transition>
-		</div>
+		<MyFooter />
 
-		<div>
-			<b-modal id="offline-modal" ref="offlineModal" centered :ok-only="true" title="Welcome Back!">
-				<p>{{ offlineMessage }}</p>
-			</b-modal>
-		</div>
+		<OfflineModal />
 
 		<div class="currencies">
 			<div class="effort currency">
@@ -269,55 +245,30 @@
 			</transition>
 		</div>
 
-		<div class="group-hire-inputs">
-			<transition name="fade">
-				<div class="group-inputs-wrapper" v-if="groupsUnlocked">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="intern-group" v-model.number="internGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="employee-group" v-model.number="employeeGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="manager-group" v-model.number="managerGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="analyst-group" v-model.number="analystGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="salesperson-group" v-model.number="salespersonGroupSize">
-					<input type="number" min="0" value="0" step="1" placeholder="0"
-						   id="executive-group" v-model.number="executiveGroupSize">
-				</div>
-			</transition>
-		</div>
+		<GroupHireInputs />
 
-		<div class="group-hire-buttons">
-			<transition name="fade">
-				<div class="group-button-wrapper" v-if="groupsUnlocked">
-					<button v-on:click="groupHireInterns()">Group Hire Interns</button>
-					<button v-on:click="groupHireEmployees()">Group Hire Employees</button>
-					<button v-on:click="groupHireManagers()">Group Hire Managers</button>
-					<button v-on:click="groupHireAnalysts()">Group Hire Analysts</button>
-					<button v-on:click="groupHireSalespeople()">Group Hire Salespeople</button>
-					<button v-on:click="groupHireExecutives()">Group Hire Executives</button>
-				</div>
-			</transition>
-		</div>
-
-		<div class="group-hire-all-button">
-			<transition name="fade">
-				<div class="group-hire-all-button-wrapper" v-if="groupsUnlocked">
-					<button v-on:click="hireAllGroup()">Group Hire All Workers</button>
-				</div>
-			</transition>
-		</div>
+		<GroupHireButtons />
 	</div>
 </template>
 
 <script>
 
 import { mapState, mapMutations } from "vuex";
+import MyFooter from "~/components/MyFooter.vue";
+import OfflineModal from "~/components/OfflineModal.vue";
+import GroupHireInputs from "~/components/GroupHireInputs.vue";
+import GroupHireButtons from "~/components/GroupHireButtons.vue";
+
 const numberformat = require("swarm-numberformat");
 
 export default {
-	components: {},
+
+	components: {
+		MyFooter,
+		OfflineModal,
+		GroupHireInputs,
+		GroupHireButtons
+	},
 
 	computed: {
 
@@ -538,10 +489,6 @@ export default {
 			this.adjustCurrency("effort", 1);
 		},
 
-		timeClick() {
-			this.adjustCurrency("time", 1);
-		},
-
 		makeProductivity() {
 			if (this.effort >= 10 && this.time >= 1) {
 				this.adjustCurrency("effort", -10);
@@ -638,23 +585,6 @@ export default {
 			this.updateRates();
 		},
 
-		bankruptcy() {
-			this.setValue("interns", 0);
-			this.setValue("employees", 0);
-			this.setValue("managers", 0);
-			this.setValue("analysts", 0);
-			this.setValue("salespeople", 0);
-			this.setValue("executives", 0);
-			this.setValue("effort", 0);
-			this.setValue("time", 0);
-			this.setValue("productivity", 0);
-			this.setValue("money", 0);
-			this.setValue("projects", 0);
-			this.setValue("products", 0);
-
-			this.updateRates();
-		},
-
 		fireLowestWorkers() {
 			if (this.interns > 0 && this.moneyPerSecond < 0) {
 				let toFire = Math.min(Math.ceil(this.moneyPerSecond / -1), this.interns);
@@ -696,13 +626,6 @@ export default {
 			this.updateRates();
 		},
 
-		groupHireInterns() {
-			if (this.internGroupSize <= this.executives) {
-				this.adjustCurrency("interns", this.internGroupSize);
-				this.updateRates();
-			}
-		},
-
 		fireIntern() {
 			if (this.interns > 0) {
 				this.adjustCurrency("interns", -1);
@@ -714,13 +637,6 @@ export default {
 		hireEmployee() {
 			this.adjustCurrency("employees", 1);
 			this.updateRates();
-		},
-
-		groupHireEmployees() {
-			if (this.employeeGroupSize <= this.executives) {
-				this.adjustCurrency("employees", this.employeeGroupSize);
-				this.updateRates();
-			}
 		},
 
 		fireEmployee() {
@@ -736,13 +652,6 @@ export default {
 			this.updateRates();
 		},
 
-		groupHireManagers() {
-			if (this.managerGroupSize <= this.executives) {
-				this.adjustCurrency("managers", this.managerGroupSize);
-				this.updateRates();
-			}
-		},
-
 		fireManager() {
 			if (this.managers > 0) {
 				this.adjustCurrency("managers", -1);
@@ -754,13 +663,6 @@ export default {
 		hireAnalyst() {
 			this.adjustCurrency("analysts", 1);
 			this.updateRates();
-		},
-
-		groupHireAnalysts() {
-			if (this.analystGroupSize <= this.executives) {
-				this.adjustCurrency("analysts", this.analystGroupSize);
-				this.updateRates();
-			}
 		},
 
 		fireAnalyst() {
@@ -776,13 +678,6 @@ export default {
 			this.updateRates();
 		},
 
-		groupHireSalespeople() {
-			if (this.salespersonGroupSize <= this.executives) {
-				this.adjustCurrency("salespeople", this.salespersonGroupSize);
-				this.updateRates();
-			}
-		},
-
 		fireSalesperson() {
 			if (this.salespeople > 0) {
 				this.adjustCurrency("salespeople", -1);
@@ -796,30 +691,11 @@ export default {
 			this.updateRates();
 		},
 
-		groupHireExecutives() {
-			if (this.executiveGroupSize <= this.executives) {
-				this.adjustCurrency("executives", this.executiveGroupSize);
-				this.updateRates();
-			}
-		},
-
 		fireExecutive() {
 			if (this.executives > 0) {
 				this.adjustCurrency("executives", -1);
 				this.flashRed("executive");
 				this.updateRates();
-			}
-		},
-
-		hireAllGroup() {
-			if (this.executives >= this.internGroupSize + this.employeeGroupSize + this.managerGroupSize
-								 + this.analystGroupSize + this.salespersonGroupSize + this.executiveGroupSize) {
-				this.groupHireInterns();
-				this.groupHireEmployees();
-				this.groupHireManagers();
-				this.groupHireAnalysts();
-				this.groupHireSalespeople();
-				this.groupHireExecutives();
 			}
 		},
 
@@ -858,14 +734,6 @@ export default {
 			this.$store.commit("load");
 		},
 
-		debugSet() {
-			let res = document.getElementById("debug-resource").value;
-			let val = parseInt(document.getElementById("debug-value").value);
-			console.log(res);
-			console.log(val);
-			this.setValue(res, val);
-		},
-
 		gameTick() {
 			this.tick();
 			this.salespeopleManagerWork();
@@ -875,7 +743,7 @@ export default {
 			}
 			this.updateRates();
 			if (this.showOfflineMessage) {
-				this.$refs.offlineModal.show();
+				this.$root.$emit("showOfflineModal");
 			}
 		}
 
@@ -910,22 +778,6 @@ export default {
 	width: 825px;
 	margin: auto;
 	margin-bottom: 0px;
-}
-
-.footer {
-	position: absolute;
-	height: 38px;
-	padding-left: 2px;
-	padding-right: 2px;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	border: 1px solid black;
-	background-color: lightskyblue;
-}
-
-.footer > * {
-	margin: 2px;
 }
 
 .debug {
@@ -1121,42 +973,6 @@ export default {
 
 #executive {
 	background-color: rgba(0, 0, 255, 0.8);
-}
-
-.group-hire-inputs {
-	display: block;
-	clear: both;
-	width: 100%;
-	margin: 5px;
-}
-
-.group-inputs-wrapper > * {
-	width: 133px;
-	margin-right: -1px;
-}
-
-.group-hire-buttons {
-	display: block;
-	clear: both;
-	width: 100%;
-	margin: 5px;
-}
-
-.group-button-wrapper > * {
-	width: 133px;
-	margin-right: -1px;
-}
-
-.group-hire-all-button {
-	display: block;
-	clear: both;
-	width: 100%;
-	margin: 5px;
-}
-
-.group-hire-all-button-wrapper > * {
-	width: 818px;
-	margin-right: -1px;
 }
 
 .fade-enter-active, .fade-leave-active {
