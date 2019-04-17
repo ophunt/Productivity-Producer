@@ -245,9 +245,7 @@
 			</transition>
 		</div>
 
-		<GroupHireInputs />
-
-		<GroupHireButtons />
+		<GroupHire />
 	</div>
 </template>
 
@@ -256,8 +254,7 @@
 import { mapState, mapMutations } from "vuex";
 import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
-import GroupHireInputs from "~/components/GroupHireInputs.vue";
-import GroupHireButtons from "~/components/GroupHireButtons.vue";
+import GroupHire from "~/components/GroupHire.vue";
 
 const numberformat = require("swarm-numberformat");
 
@@ -266,8 +263,7 @@ export default {
 	components: {
 		MyFooter,
 		OfflineModal,
-		GroupHireInputs,
-		GroupHireButtons
+		GroupHire
 	},
 
 	computed: {
