@@ -200,6 +200,15 @@ export default {
 	margin: 2px;
 }
 
+.debug {
+	display: inline-block;
+}
+
+#bankrupt-button {
+	background-color: red;
+	float: right;
+}
+
 .fade-enter-active, .fade-leave-active {
 	transition: opacity 1s;
 }

@@ -269,8 +269,6 @@ export default {
 	computed: {
 
 		...mapState ({
-			debug: state => state.debug,
-
 			showOfflineMessage: state => state.player.showOfflineMessage,
 			offlineMessage: state => state.player.offlineMessage,
 
@@ -774,15 +772,6 @@ export default {
 	width: 825px;
 	margin: auto;
 	margin-bottom: 0px;
-}
-
-.debug {
-	display: inline-block;
-}
-
-#bankrupt-button {
-	background-color: red;
-	float: right;
 }
 
 .currencies {
