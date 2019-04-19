@@ -119,23 +119,7 @@
 		</div>
 
 		<div class="workers">
-			<transition name="fade" mode="out-in">
-				<div class="worker-wrapper" id="intern" key="intern" v-if="internsUnlocked"
-				v-b-tooltip.hover.html title="<b>Intern</b><br>Earns 0.2 Time per second<br>
-											  Costs 1 Money per second">
-					<div class="add-worker">
-						<button v-on:click="hireIntern()">+</button>
-					</div>
-					<div>Interns:<br>{{ formatNumber(interns) }}</div>
-					<div class="remove-worker">
-						<button v-on:click="fireIntern()">-</button>
-					</div>
-				</div>
-
-				<div class="worker-hint" id="intern" key="intern-hint" v-if="projects >= 1 && !internsUnlocked">
-					<div>Reach<br>1 Product<br>to Unlock<br>******s</div>
-				</div>
-			</transition>
+			<Intern />
 
 			<transition name="fade" mode="out-in">
 				<div class="worker-wrapper" id="employee" key="employee" v-if="employeesUnlocked"
@@ -252,8 +236,10 @@
 <script>
 
 import { mapState, mapMutations } from "vuex";
+
 import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
+import Intern from "~/components/Intern.vue";
 import GroupHire from "~/components/GroupHire.vue";
 
 const numberformat = require("swarm-numberformat");
@@ -263,6 +249,7 @@ export default {
 	components: {
 		MyFooter,
 		OfflineModal,
+		Intern,
 		GroupHire
 	},
 
@@ -615,19 +602,6 @@ export default {
 			this.setValue("money", 0);
 		},
 
-		hireIntern() {
-			this.adjustCurrency("interns", 1);
-			this.updateRates();
-		},
-
-		fireIntern() {
-			if (this.interns > 0) {
-				this.adjustCurrency("interns", -1);
-				this.flashRed("intern");
-				this.updateRates();
-			}
-		},
-
 		hireEmployee() {
 			this.adjustCurrency("employees", 1);
 			this.updateRates();
@@ -934,10 +908,6 @@ export default {
 	text-align: center;
 	padding: 0px;
 	clear: none;
-}
-
-#intern {
-	background-color: rgba(0, 0, 255, 0.05);
 }
 
 #employee {
