@@ -121,24 +121,7 @@
 		<div class="workers">
 			<Intern />
 
-			<transition name="fade" mode="out-in">
-				<div class="worker-wrapper" id="employee" key="employee" v-if="employeesUnlocked"
-				v-b-tooltip.hover.html title="<b>Employee</b><br>Earns 0.1 Productivity<br>per second<br>
-											  Costs 1 Effort, 0.1 Time,<br>and 1 Money per second">
-					<div class="add-worker">
-						<button v-on:click="hireEmployee()">+</button>
-					</div>
-					<div>Employees:<br>{{ formatNumber(employees) }}</div>
-					<div class="remove-worker">
-						<button v-on:click="fireEmployee()">-</button>
-					</div>
-				</div>
-
-				<div class="worker-hint" id="employee" key="employee-hint"
-				v-if="internsUnlocked && !employeesUnlocked">
-					<div>Reach<br>2 Products<br>to Unlock<br>********s</div>
-				</div>
-			</transition>
+			<Employee />
 
 			<transition name="fade" mode="out-in">
 				<div class="worker-wrapper" id="manager" key="manager" v-if="managersUnlocked"
@@ -240,6 +223,7 @@ import { mapState, mapMutations } from "vuex";
 import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
 import Intern from "~/components/Intern.vue";
+import Employee from "~/components/Employee.vue";
 import GroupHire from "~/components/GroupHire.vue";
 
 const numberformat = require("swarm-numberformat");
@@ -250,6 +234,7 @@ export default {
 		MyFooter,
 		OfflineModal,
 		Intern,
+		Employee,
 		GroupHire
 	},
 
@@ -304,78 +289,6 @@ export default {
 
 			groupsUnlocked: state => state.player.groupsUnlocked,
 		}),
-
-		internGroupSize: {
-			get () {
-				return this.$store.state.player.internGroupSize;
-			},
-			set: function (size) {
-				this.$store.commit("setValue", {
-					resource: "internGroupSize",
-					value: Math.floor(size)
-				});
-			}
-		},
-
-		employeeGroupSize: {
-			get () {
-				return this.$store.state.player.employeeGroupSize;
-			},
-			set: function (size) {
-				this.$store.commit("setValue", {
-					resource: "employeeGroupSize",
-					value: Math.floor(size)
-				});
-			}
-		},
-
-		managerGroupSize: {
-			get () {
-				return this.$store.state.player.managerGroupSize;
-			},
-			set: function (size) {
-				this.$store.commit("setValue", {
-					resource: "managerGroupSize",
-					value: Math.floor(size)
-				});
-			}
-		},
-
-		analystGroupSize: {
-			get () {
-				return this.$store.state.player.analystGroupSize;
-			},
-			set: function (size) {
-				this.$store.commit("setValue", {
-					resource: "analystGroupSize",
-					value: Math.floor(size)
-				});
-			}
-		},
-
-		salespersonGroupSize: {
-			get () {
-				return this.$store.state.player.salespersonGroupSize;
-			},
-			set: function (size) {
-				this.$store.commit("setValue", {
-					resource: "salespersonGroupSize",
-					value: Math.floor(size)
-				});
-			}
-		},
-
-		executiveGroupSize: {
-			get () {
-				return this.$store.state.player.executiveGroupSize;
-			},
-			set: function (size) {
-				this.$store.commit("setValue", {
-					resource: "executiveGroupSize",
-					value: Math.floor(size)
-				});
-			}
-		},
 
 		approximateEffortPerSecond: function() {
 			let approx = this.effortPerSecond;
@@ -600,19 +513,6 @@ export default {
 			}
 
 			this.setValue("money", 0);
-		},
-
-		hireEmployee() {
-			this.adjustCurrency("employees", 1);
-			this.updateRates();
-		},
-
-		fireEmployee() {
-			if (this.employees > 0) {
-				this.adjustCurrency("employees", -1);
-				this.flashRed("employee");
-				this.updateRates();
-			}
 		},
 
 		hireManager() {
@@ -908,10 +808,6 @@ export default {
 	text-align: center;
 	padding: 0px;
 	clear: none;
-}
-
-#employee {
-	background-color: rgba(0, 0, 255, 0.20);
 }
 
 #manager {
