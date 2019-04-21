@@ -123,28 +123,7 @@
 
 			<Employee />
 
-			<transition name="fade" mode="out-in">
-				<div class="worker-wrapper" id="manager" key="manager" v-if="managersUnlocked"
-				v-b-tooltip.hover.html title="<b>Manager</b><br>
-											  Attempts to make<br>
-											  a Project every 30 seconds<br>
-											  and to make a Product<br>
-											  every 5 minutes<br>
-											  Costs 1 Money per Second">
-					<div class="add-worker">
-						<button v-on:click="hireManager()">+</button>
-					</div>
-					<div>Managers:<br>{{ formatNumber(managers) }}</div>
-					<div class="remove-worker">
-						<button v-on:click="fireManager()">-</button>
-					</div>
-				</div>
-
-				<div class="worker-hint" id="manager" key="manager-hint"
-				v-if="employeesUnlocked && !managersUnlocked">
-					<div>Reach<br>3 Products<br>to Unlock<br>*******s</div>
-				</div>
-			</transition>
+			<Manager />
 
 			<transition name="fade" mode="out-in">
 				<div class="worker-wrapper" id="analyst" key="analyst" v-if="analystsUnlocked"
@@ -224,6 +203,7 @@ import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
 import Intern from "~/components/Intern.vue";
 import Employee from "~/components/Employee.vue";
+import Manager from "~/components/Manager.vue";
 import GroupHire from "~/components/GroupHire.vue";
 
 const numberformat = require("swarm-numberformat");
@@ -235,6 +215,7 @@ export default {
 		OfflineModal,
 		Intern,
 		Employee,
+		Manager,
 		GroupHire
 	},
 
@@ -513,19 +494,6 @@ export default {
 			}
 
 			this.setValue("money", 0);
-		},
-
-		hireManager() {
-			this.adjustCurrency("managers", 1);
-			this.updateRates();
-		},
-
-		fireManager() {
-			if (this.managers > 0) {
-				this.adjustCurrency("managers", -1);
-				this.flashRed("manager");
-				this.updateRates();
-			}
 		},
 
 		hireAnalyst() {
@@ -808,10 +776,6 @@ export default {
 	text-align: center;
 	padding: 0px;
 	clear: none;
-}
-
-#manager {
-	background-color: rgba(0, 0, 255, 0.35);
 }
 
 #analyst {
