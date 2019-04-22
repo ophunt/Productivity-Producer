@@ -145,28 +145,7 @@
 				</div>
 			</transition>
 
-			<transition name="fade" mode="out-in">
-				<div class="worker-wrapper" id="salesperson" key="salesperson" v-if="salespeopleUnlocked"
-				v-b-tooltip.hover.html title="<b>Salesperson</b><br>
-											  Attempts to sell a<br>
-											  Project ($400) every minute<br>
-											  and sell a Product ($2000)<br>
-											  every 5 minutes<br>
-											  Costs 1 Money per Second">
-					<div class="add-worker">
-						<button v-on:click="hireSalesperson()">+</button>
-					</div>
-					<div>Salespeople:<br>{{ formatNumber(salespeople) }}</div>
-					<div class="remove-worker">
-						<button v-on:click="fireSalesperson()">-</button>
-					</div>
-				</div>
-
-				<div class="worker-hint" id="salesperson" key="salesperson-hint"
-				v-if="analystsUnlocked && !salespeopleUnlocked">
-					<div>Reach<br>5 Products<br>to Unlock<br>***********</div>
-				</div>
-			</transition>
+			<Salesperson />
 
 			<transition name="fade" mode="out-in">
 				<div class="worker-wrapper" id="executive" key="executive" v-if="executivesUnlocked"
@@ -204,6 +183,7 @@ import OfflineModal from "~/components/OfflineModal.vue";
 import Intern from "~/components/Intern.vue";
 import Employee from "~/components/Employee.vue";
 import Manager from "~/components/Manager.vue";
+import Salesperson from "~/components/Salesperson.vue";
 import GroupHire from "~/components/GroupHire.vue";
 
 const numberformat = require("swarm-numberformat");
@@ -216,6 +196,7 @@ export default {
 		Intern,
 		Employee,
 		Manager,
+		Salesperson,
 		GroupHire
 	},
 
@@ -509,19 +490,6 @@ export default {
 			}
 		},
 
-		hireSalesperson() {
-			this.adjustCurrency("salespeople", 1);
-			this.updateRates();
-		},
-
-		fireSalesperson() {
-			if (this.salespeople > 0) {
-				this.adjustCurrency("salespeople", -1);
-				this.flashRed("salesperson");
-				this.updateRates();
-			}
-		},
-
 		hireExecutive() {
 			this.adjustCurrency("executives", 1);
 			this.updateRates();
@@ -780,10 +748,6 @@ export default {
 
 #analyst {
 	background-color: rgba(0, 0, 255, 0.5);
-}
-
-#salesperson {
-	background-color: rgba(0, 0, 255, 0.65);
 }
 
 #executive {
