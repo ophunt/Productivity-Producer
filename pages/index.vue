@@ -125,25 +125,7 @@
 
 			<Manager />
 
-			<transition name="fade" mode="out-in">
-				<div class="worker-wrapper" id="analyst" key="analyst" v-if="analystsUnlocked"
-				v-b-tooltip.hover.html title="<b>Analyst</b><br>Each one measures<br>
-											  net income for<br>a single currency<br>
-											  Costs 2.50 Money per Second">
-					<div class="add-worker">
-						<button v-on:click="hireAnalyst()">+</button>
-					</div>
-					<div>Analysts:<br>{{ formatNumber(analysts) }}</div>
-					<div class="remove-worker">
-						<button v-on:click="fireAnalyst()">-</button>
-					</div>
-				</div>
-
-				<div class="worker-hint" id="analyst" key="analyst-hint"
-				v-if="managersUnlocked && !analystsUnlocked">
-					<div>Reach<br>4 Products<br>to Unlock<br>*******s</div>
-				</div>
-			</transition>
+			<Analyst />
 
 			<Salesperson />
 
@@ -183,6 +165,7 @@ import OfflineModal from "~/components/OfflineModal.vue";
 import Intern from "~/components/Intern.vue";
 import Employee from "~/components/Employee.vue";
 import Manager from "~/components/Manager.vue";
+import Analyst from "~/components/Analyst.vue";
 import Salesperson from "~/components/Salesperson.vue";
 import GroupHire from "~/components/GroupHire.vue";
 
@@ -196,6 +179,7 @@ export default {
 		Intern,
 		Employee,
 		Manager,
+		Analyst,
 		Salesperson,
 		GroupHire
 	},
@@ -477,19 +461,6 @@ export default {
 			this.setValue("money", 0);
 		},
 
-		hireAnalyst() {
-			this.adjustCurrency("analysts", 1);
-			this.updateRates();
-		},
-
-		fireAnalyst() {
-			if (this.analysts > 0) {
-				this.adjustCurrency("analysts", -1);
-				this.flashRed("analyst");
-				this.updateRates();
-			}
-		},
-
 		hireExecutive() {
 			this.adjustCurrency("executives", 1);
 			this.updateRates();
@@ -744,10 +715,6 @@ export default {
 	text-align: center;
 	padding: 0px;
 	clear: none;
-}
-
-#analyst {
-	background-color: rgba(0, 0, 255, 0.5);
 }
 
 #executive {
