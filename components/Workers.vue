@@ -11,12 +11,12 @@
 
 <script>
 
-import Intern from "./Intern.vue";
-import Employee from "~/components/Employee.vue";
-import Manager from "~/components/Manager.vue";
-import Analyst from "~/components/Analyst.vue";
-import Salesperson from "~/components/Salesperson.vue";
-import Executive from "~/components/Executive.vue";
+import Intern from "./Workers/Intern.vue";
+import Employee from "./Workers/Employee.vue";
+import Manager from "./Workers/Manager.vue";
+import Analyst from "./Workers/Analyst.vue";
+import Salesperson from "./Workers/Salesperson.vue";
+import Executive from "./Workers/Executive.vue";
 
 export default {
 
