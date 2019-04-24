@@ -129,27 +129,7 @@
 
 			<Salesperson />
 
-			<transition name="fade" mode="out-in">
-				<div class="worker-wrapper" id="executive" key="executive" v-if="executivesUnlocked"
-				v-b-tooltip.hover.html title="<b>Executive</b><br>
-											  Allows you to hire in groups<br>
-											  Each one increases your<br>
-											  group hire limit by one<br>
-											  Costs 5 Money per second">
-					<div class="add-worker">
-						<button v-on:click="hireExecutive()">+</button>
-					</div>
-					<div>Executives:<br>{{ formatNumber(executives) }}</div>
-					<div class="remove-worker">
-						<button v-on:click="fireExecutive()">-</button>
-					</div>
-				</div>
-
-				<div class="worker-hint" id="executive" key="executive-hint"
-				v-if="salespeopleUnlocked && !executivesUnlocked">
-					<div>Reach<br>100k Money<br>to Unlock<br>*********s</div>
-				</div>
-			</transition>
+			<Executive />
 		</div>
 
 		<GroupHire />
@@ -167,6 +147,7 @@ import Employee from "~/components/Employee.vue";
 import Manager from "~/components/Manager.vue";
 import Analyst from "~/components/Analyst.vue";
 import Salesperson from "~/components/Salesperson.vue";
+import Executive from "~/components/Executive.vue";
 import GroupHire from "~/components/GroupHire.vue";
 
 const numberformat = require("swarm-numberformat");
@@ -181,6 +162,7 @@ export default {
 		Manager,
 		Analyst,
 		Salesperson,
+		Executive,
 		GroupHire
 	},
 
@@ -461,19 +443,6 @@ export default {
 			this.setValue("money", 0);
 		},
 
-		hireExecutive() {
-			this.adjustCurrency("executives", 1);
-			this.updateRates();
-		},
-
-		fireExecutive() {
-			if (this.executives > 0) {
-				this.adjustCurrency("executives", -1);
-				this.flashRed("executive");
-				this.updateRates();
-			}
-		},
-
 		formatNumber(num) {
 			return numberformat.formatShort(num, {maxSmall: "0", sigFigs: 3});
 		},
@@ -715,10 +684,6 @@ export default {
 	text-align: center;
 	padding: 0px;
 	clear: none;
-}
-
-#executive {
-	background-color: rgba(0, 0, 255, 0.8);
 }
 
 .fade-enter-active, .fade-leave-active {
