@@ -118,19 +118,7 @@
 			</transition>
 		</div>
 
-		<div class="workers">
-			<Intern />
-
-			<Employee />
-
-			<Manager />
-
-			<Analyst />
-
-			<Salesperson />
-
-			<Executive />
-		</div>
+		<Workers />
 
 		<GroupHire />
 	</div>
@@ -142,12 +130,7 @@ import { mapState, mapMutations } from "vuex";
 
 import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
-import Intern from "~/components/Intern.vue";
-import Employee from "~/components/Employee.vue";
-import Manager from "~/components/Manager.vue";
-import Analyst from "~/components/Analyst.vue";
-import Salesperson from "~/components/Salesperson.vue";
-import Executive from "~/components/Executive.vue";
+import Workers from "~/components/Workers.vue";
 import GroupHire from "~/components/GroupHire.vue";
 
 const numberformat = require("swarm-numberformat");
@@ -157,12 +140,7 @@ export default {
 	components: {
 		MyFooter,
 		OfflineModal,
-		Intern,
-		Employee,
-		Manager,
-		Analyst,
-		Salesperson,
-		Executive,
+		Workers,
 		GroupHire
 	},
 
@@ -623,67 +601,6 @@ export default {
 .slot > p {
 	display: table-cell;
 	vertical-align: center;
-}
-
-.workers {
-	display: block;
-	clear: both;
-	width: 100%;
-	margin: 5px;
-}
-
-.workers > * {
-	float: left;
-	margin-bottom: 4px;
-	margin-right: 4px;
-}
-
-.worker-wrapper {
-	display: table;
-	border: 1px solid black;
-	width: 133px;
-	height: 120px;
-}
-
-.worker-wrapper > div {
-	display: table-row;
-	text-align: center;
-	padding: 0px;
-	clear: none;
-}
-
-.worker-wrapper > div > button {
-	cursor: pointer;
-	background-color: lightskyblue;
-	margin-top: 4px;
-	width: 50px;
-	border: 0px;
-	border-radius: 3px;
-}
-
-.worker-wrapper > div:nth-child(2) {
-	vertical-align: middle;
-	cursor: default;
-}
-
-.remove-worker > * {
-	margin-top: 0px;
-	margin-bottom: 4px;
-}
-
-.worker-hint {
-	display: table;
-	border: 1px solid black;
-	width: 133px;
-	height: 120px;
-}
-
-.worker-hint > div {
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-	padding: 0px;
-	clear: none;
 }
 
 .fade-enter-active, .fade-leave-active {
