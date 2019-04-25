@@ -81,42 +81,7 @@
 			</transition>
 		</div>
 
-		<div class="projects">
-			<transition name="fade">
-				<div class="project-wrapper" v-if="projectsUnlocked">
-					<div
-					class="make-project" id="project-maker"
-					v-b-tooltip.hover.html title="<b>Create new Project</b> for 10 Productivity (15 max)"
-					v-on:click="makeProject()">
-						<p>Make<br>Project</p>
-					</div>
-					<div
-					class="product"
-					v-for="n in products" :key="n*100"
-					v-b-tooltip.hover.html title="Earns you 5<br>Money per second">
-					<p>Product<br>{{ n }}</p>
-					</div>
-					<div
-					class="make-product"
-					v-if="projects >= 5"
-					v-on:click="makeProduct()"
-					v-b-tooltip.hover.html title="<b>Make a Product</b><br>using 5 Projects">
-					<p>Make<br>Product</p>
-					</div>
-					<div
-					class="project"
-					v-for="n in (projects - (projects >= 5))" :key="n"
-					v-b-tooltip.hover.html title="Earns you 1<br>Money per second">
-					<p>Project<br>{{ n + (projects >= 5) }}</p>
-					</div>
-					<div
-					class="slot"
-					v-for="n in (15 - products - projects)" :key="n/100">
-					<p>Empty<br>Slot</p>
-					</div>
-				</div>
-			</transition>
-		</div>
+		<Projects />
 
 		<Workers />
 
@@ -130,6 +95,7 @@ import { mapState, mapMutations } from "vuex";
 
 import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
+import Projects from "~/components/Projects.vue";
 import Workers from "~/components/Workers.vue";
 import GroupHire from "~/components/GroupHire.vue";
 
@@ -140,6 +106,7 @@ export default {
 	components: {
 		MyFooter,
 		OfflineModal,
+		Projects,
 		Workers,
 		GroupHire
 	},
@@ -300,32 +267,6 @@ export default {
 					"<b>Gain Productivity</b><br>Earns 1 Effort per second<br>Costs 10 Effort and 1 Time",
 					"productivity-inner",
 					1000);
-			}
-		},
-
-		makeProject() {
-			if (this.productivity >= 10 && this.projects + this.products < 15) {
-				this.adjustCurrency("projects", 1);
-				this.adjustCurrency("productivity", -10);
-				this.updateRates();
-			} else if (this.projects + this.products < 15) {
-				this.tempTooltip("Not enough resources!",
-					"<b>Create new Project</b> for 10 Productivity (15 max)",
-					"project-maker",
-					1000);
-			} else {
-				this.tempTooltip("Max projects reached!",
-					"<b>Create new Project</b> for 10 Productivity (15 max)",
-					"project-maker",
-					1000);
-			}
-		},
-
-		makeProduct() {
-			if (this.projects >= 5) {
-				this.adjustCurrency("products", 1);
-				this.adjustCurrency("projects", -5);
-				this.updateRates();
 			}
 		},
 
@@ -546,61 +487,6 @@ export default {
 
 .money-fader {
 	display: inline;
-}
-
-.projects {
-	display: block;
-	clear: both;
-	width: 900px;
-	margin: 5px;
-}
-
-.project-wrapper {
-	margin: 0px;
-}
-
-.project-wrapper > * {
-	display: inline-table;
-	float: left;
-	width: 97px;
-	height: 97px;
-	border: 1px solid black;
-	text-align: center;
-	margin-bottom: 6px;
-	margin-right: 6px;
-}
-
-.project-wrapper > * > p {
-	display: table-cell;
-	vertical-align: middle;
-}
-
-.make-project {
-	background-color: #00FF00;
-	cursor: pointer;
-}
-
-.project {
-	background-color: silver;
-}
-
-.make-product {
-	background-color: green;
-	cursor: pointer;
-}
-
-.product {
-	background-color: gold;
-}
-
-.slot {
-	background-color: white;
-	display: table;
-}
-
-.slot > p {
-	display: table-cell;
-	vertical-align: center;
 }
 
 .fade-enter-active, .fade-leave-active {
