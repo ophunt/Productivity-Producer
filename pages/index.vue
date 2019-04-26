@@ -5,22 +5,7 @@
 		<OfflineModal />
 
 		<div class="currencies">
-			<div class="effort currency">
-				<div
-				class="currency-inner"
-				v-on:click="effortClick()"
-				v-b-tooltip.hover.html title="<b>Gain Effort</b>">
-					<p></p>
-					<p>
-						Effort:<br>{{ formatNumber(effort) }}
-					</p>
-					<p v-if="analysts >= 1"
-					v-bind:class="{ positiveIncome: approximateEffortPerSecond > 0,
-									negativeIncome: approximateEffortPerSecond < 0 }">
-						{{ formatNumber(approximateEffortPerSecond) }} /s
-					</p>
-				</div>
-			</div>
+			<Effort />
 
 			<transition name="fade">
 				<div class="time currency" v-if="timeUnlocked">
@@ -94,6 +79,7 @@
 import { mapState, mapMutations } from "vuex";
 
 import MyFooter from "~/components/MyFooter.vue";
+import Effort from "~/components/Effort.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
 import Projects from "~/components/Projects.vue";
 import Workers from "~/components/Workers.vue";
@@ -106,6 +92,7 @@ export default {
 	components: {
 		MyFooter,
 		OfflineModal,
+		Effort,
 		Projects,
 		Workers,
 		GroupHire
@@ -250,10 +237,6 @@ export default {
 			this.setValue("timePerSecond", this.calcTimePerSecond());
 			this.setValue("productivityPerSecond", this.calcProductivityPerSecond());
 			this.setValue("moneyPerSecond", this.calcMoneyPerSecond());
-		},
-
-		effortClick() {
-			this.adjustCurrency("effort", 1);
 		},
 
 		makeProductivity() {
@@ -483,10 +466,6 @@ export default {
 
 .redBackground {
 	background-color: red;
-}
-
-.money-fader {
-	display: inline;
 }
 
 .fade-enter-active, .fade-leave-active {
