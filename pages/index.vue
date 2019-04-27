@@ -7,23 +7,7 @@
 		<div class="currencies">
 			<Effort />
 
-			<transition name="fade">
-				<div class="time currency" v-if="timeUnlocked">
-					<div
-					class="currency-inner"
-					v-b-tooltip.hover.html title="<b>Time</b><br>Earned over time">
-						<p></p>
-						<p>
-							Time:<br>{{ formatNumber(time) }}
-						</p>
-						<p v-if="analysts >= 2"
-						v-bind:class="{ positiveIncome: approximateTimePerSecond > 0,
-										negativeIncome: approximateTimePerSecond < 0 }">
-							{{ formatNumber(approximateTimePerSecond) }} /s
-						</p>
-					</div>
-				</div>
-			</transition>
+			<Time />
 
 			<transition name="fade">
 				<div class="productivity currency" v-if="productivityUnlocked">
@@ -79,8 +63,9 @@
 import { mapState, mapMutations } from "vuex";
 
 import MyFooter from "~/components/MyFooter.vue";
-import Effort from "~/components/Effort.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
+import Effort from "~/components/Effort.vue";
+import Time from "~/components/Time.vue";
 import Projects from "~/components/Projects.vue";
 import Workers from "~/components/Workers.vue";
 import GroupHire from "~/components/GroupHire.vue";
@@ -93,6 +78,7 @@ export default {
 		MyFooter,
 		OfflineModal,
 		Effort,
+		Time,
 		Projects,
 		Workers,
 		GroupHire
@@ -149,16 +135,6 @@ export default {
 
 			groupsUnlocked: state => state.player.groupsUnlocked,
 		}),
-
-		approximateEffortPerSecond: function() {
-			let approx = this.effortPerSecond;
-			return Math.floor(100*approx)/100;
-		},
-
-		approximateTimePerSecond: function() {
-			let approx = this.timePerSecond;
-			return Math.floor(100*approx)/100;
-		},
 
 		approximateProductivityPerSecond: function() {
 			let approx = this.productivityPerSecond + this.managers * -1/3;
