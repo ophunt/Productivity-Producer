@@ -9,26 +9,7 @@
 
 			<Time />
 
-			<transition name="fade">
-				<div class="productivity currency" v-if="productivityUnlocked">
-					<div
-					class="currency-inner" id="productivity-inner"
-					v-bind:class="{ redBackground: productivityCrippled }"
-					v-on:click="makeProductivity()"
-					v-b-tooltip.hover.html title="<b>Gain Productivity</b><br>
-												  Earns 1 Effort per second<br>Costs 10 Effort and 1 Time">
-						<p></p>
-						<p>
-							Productivity:<br>{{ formatNumber(productivity) }}
-						</p>
-						<p v-if="analysts >= 3"
-						v-bind:class="{ positiveIncome: approximateProductivityPerSecond > 0,
-										negativeIncome: approximateProductivityPerSecond < 0 }">
-							{{ formatNumber(approximateProductivityPerSecond) }} /s
-						</p>
-					</div>
-				</div>
-			</transition>
+			<Productivity />
 
 			<transition name="fade">
 				<div class="money currency" v-if="projectsUnlocked">
@@ -66,6 +47,7 @@ import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
 import Effort from "~/components/Effort.vue";
 import Time from "~/components/Time.vue";
+import Productivity from "~/components/Productivity.vue";
 import Projects from "~/components/Projects.vue";
 import Workers from "~/components/Workers.vue";
 import GroupHire from "~/components/GroupHire.vue";
@@ -79,6 +61,7 @@ export default {
 		OfflineModal,
 		Effort,
 		Time,
+		Productivity,
 		Projects,
 		Workers,
 		GroupHire
@@ -135,11 +118,6 @@ export default {
 
 			groupsUnlocked: state => state.player.groupsUnlocked,
 		}),
-
-		approximateProductivityPerSecond: function() {
-			let approx = this.productivityPerSecond + this.managers * -1/3;
-			return Math.floor(100*approx)/100;
-		},
 
 		approximateMoneyPerSecond: function() {
 			let approx = this.moneyPerSecond + this.salespeople * 400/60 * 2;
@@ -213,20 +191,6 @@ export default {
 			this.setValue("timePerSecond", this.calcTimePerSecond());
 			this.setValue("productivityPerSecond", this.calcProductivityPerSecond());
 			this.setValue("moneyPerSecond", this.calcMoneyPerSecond());
-		},
-
-		makeProductivity() {
-			if (this.effort >= 10 && this.time >= 1) {
-				this.adjustCurrency("effort", -10);
-				this.adjustCurrency("time", -1);
-				this.adjustCurrency("productivity", 1);
-				this.updateRates();
-			} else {
-				this.tempTooltip("Not enough resources!",
-					"<b>Gain Productivity</b><br>Earns 1 Effort per second<br>Costs 10 Effort and 1 Time",
-					"productivity-inner",
-					1000);
-			}
 		},
 
 		salespeopleManagerWork() {
