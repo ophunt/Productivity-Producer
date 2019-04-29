@@ -11,24 +11,7 @@
 
 			<Productivity />
 
-			<transition name="fade">
-				<div class="money currency" v-if="projectsUnlocked">
-					<div
-					class="currency-inner" id="money-inner"
-					v-b-tooltip.hover.html title="<b>Money</b> is earned<br>from Projects<br>
-												  If you run out,<br>workers will be fired">
-						<p></p>
-						<p>
-							Money:<br>{{ formatNumber(money) }}
-						</p>
-						<p v-if="analysts >= 4"
-						v-bind:class="{ positiveIncome: approximateMoneyPerSecond > 0,
-										negativeIncome: approximateMoneyPerSecond < 0 }">
-							{{ formatNumber(approximateMoneyPerSecond) }} /s
-						</p>
-					</div>
-				</div>
-			</transition>
+			<Money />
 		</div>
 
 		<Projects />
@@ -48,6 +31,7 @@ import OfflineModal from "~/components/OfflineModal.vue";
 import Effort from "~/components/Effort.vue";
 import Time from "~/components/Time.vue";
 import Productivity from "~/components/Productivity.vue";
+import Money from "~/components/Money.vue";
 import Projects from "~/components/Projects.vue";
 import Workers from "~/components/Workers.vue";
 import GroupHire from "~/components/GroupHire.vue";
@@ -62,6 +46,7 @@ export default {
 		Effort,
 		Time,
 		Productivity,
+		Money,
 		Projects,
 		Workers,
 		GroupHire
@@ -118,11 +103,6 @@ export default {
 
 			groupsUnlocked: state => state.player.groupsUnlocked,
 		}),
-
-		approximateMoneyPerSecond: function() {
-			let approx = this.moneyPerSecond + this.salespeople * 400/60 * 2;
-			return Math.floor(100*approx)/100;
-		},
 
 		deployEnv: function() {
 			return process.env.DEPLOY_ENV;
@@ -289,20 +269,6 @@ export default {
 			return numberformat.formatShort(num, {maxSmall: "0", sigFigs: 3});
 		},
 
-		tempTooltip(message, origMessage, elementID, duration) {
-			let elem = document.getElementById(elementID);
-			elem.setAttribute("title", message);
-			this.$root.$emit("bv::hide::tooltip", elementID);
-			this.$root.$emit("bv::show::tooltip", elementID);
-			setTimeout(() => {
-				elem.setAttribute("title", origMessage);
-				this.$root.$emit("bv::hide::tooltip", elementID);
-				if (elem.matches(":hover")) {
-					this.$root.$emit("bv::show::tooltip", elementID);
-				}
-			}, duration);
-		},
-
 		flashRed(elementID) {
 			let elem = document.getElementById(elementID);
 			elem.classList.remove("flash-red");
@@ -371,37 +337,6 @@ export default {
 	clear: both;
 	width: 100%;
 	margin: 5px;
-}
-
-/* replace currency and currency inner with a single element of inline-table */
-.currency {
-	display: block;
-	float: left;
-	cursor: pointer;
-	margin-bottom: 6px;
-	margin-right: 6px;
-}
-
-.currency-inner {
-	display: table;
-	width: 200px;
-	height: 200px;
-	border: 1px solid black;
-	background-color: lightgrey;
-	text-align: center;
-}
-
-.currency p {
-	display: table-row;
-	vertical-align: middle;
-}
-
-.positiveIncome {
-	color: green;
-}
-
-.negativeIncome {
-	color: red;
 }
 
 .redBackground {
