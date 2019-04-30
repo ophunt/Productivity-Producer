@@ -162,6 +162,20 @@ export default {
 					1000);
 			}
 		},
+
+		tempTooltip(message, origMessage, elementID, duration) {
+			let elem = document.getElementById(elementID);
+			elem.setAttribute("title", message);
+			this.$root.$emit("bv::hide::tooltip", elementID);
+			this.$root.$emit("bv::show::tooltip", elementID);
+			setTimeout(() => {
+				elem.setAttribute("title", origMessage);
+				this.$root.$emit("bv::hide::tooltip", elementID);
+				if (elem.matches(":hover")) {
+					this.$root.$emit("bv::show::tooltip", elementID);
+				}
+			}, duration);
+		},
 	}
 
 };

@@ -4,15 +4,7 @@
 
 		<OfflineModal />
 
-		<div class="currencies">
-			<Effort />
-
-			<Time />
-
-			<Productivity />
-
-			<Money />
-		</div>
+		<Currencies />
 
 		<Projects />
 
@@ -28,10 +20,7 @@ import { mapState, mapMutations } from "vuex";
 
 import MyFooter from "~/components/MyFooter.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
-import Effort from "~/components/Effort.vue";
-import Time from "~/components/Time.vue";
-import Productivity from "~/components/Productivity.vue";
-import Money from "~/components/Money.vue";
+import Currencies from "~/components/Currencies.vue";
 import Projects from "~/components/Projects.vue";
 import Workers from "~/components/Workers.vue";
 import GroupHire from "~/components/GroupHire.vue";
@@ -43,10 +32,7 @@ export default {
 	components: {
 		MyFooter,
 		OfflineModal,
-		Effort,
-		Time,
-		Productivity,
-		Money,
+		Currencies,
 		Projects,
 		Workers,
 		GroupHire
