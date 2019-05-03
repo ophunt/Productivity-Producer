@@ -95,23 +95,4 @@ export default {
 	clear: none;
 }
 
-.fade-enter-active, .fade-leave-active {
-	transition: opacity 1s;
-}
-
-.fade-enter, .fade-leave-to {
-	opacity: 0;
-}
-
-.flash-red {
-	animation: flash-red 0.5s 1;
-	animation-fill-mode: both;
-}
-
-@keyframes flash-red {
-	33% {
-		background-color: red;
-	}
-}
-
 </style>

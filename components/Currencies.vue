@@ -29,6 +29,13 @@ export default {
 
 <style>
 
+.currencies {
+	display: block;
+	clear: both;
+	width: 100%;
+	margin: 5px;
+}
+
 .currency {
 	display: block;
 	float: left;

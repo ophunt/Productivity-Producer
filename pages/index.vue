@@ -1,15 +1,10 @@
 <template>
 	<div class="app">
 		<MyFooter />
-
 		<OfflineModal />
-
 		<Currencies />
-
 		<Projects />
-
 		<Workers />
-
 		<GroupHire />
 	</div>
 </template>
@@ -316,13 +311,6 @@ export default {
 	width: 825px;
 	margin: auto;
 	margin-bottom: 0px;
-}
-
-.currencies {
-	display: block;
-	clear: both;
-	width: 100%;
-	margin: 5px;
 }
 
 .redBackground {
