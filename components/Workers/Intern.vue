@@ -1,39 +1,34 @@
 <template>
-	<div class="footer">
-		<button id="save-button" v-on:click="save()">Save</button>
-		<button id="load-button" v-on:click="load()">Load</button>
-		<div class="debug" v-if="debug">
-			<button id="debug-button" v-on:click="debugSet()">Debug Button</button>
-			<input id="debug-resource"><input id="debug-value">
+	<transition name="fade" mode="out-in">
+		<div class="worker-wrapper" id="intern" key="intern" v-if="internsUnlocked"
+		v-b-tooltip.hover.html title="<b>Intern</b><br>Earns 0.2 Time per second<br>
+									  Costs 1 Money per second">
+			<div class="add-worker">
+				<button v-on:click="hireIntern()">+</button>
+			</div>
+			<div>Interns:<br>{{ formatNumber(interns) }}</div>
+			<div class="remove-worker">
+				<button v-on:click="fireIntern()">-</button>
+			</div>
 		</div>
-		<transition name="fade">
-			<button
-			 id="bankrupt-button"
-			 v-on:click="bankruptcy()"
-			 v-if="effort < 0 || time < 0"
-			 v-b-tooltip.hover.html title="<b>Declare Bankruptcy</b><br>
-			 							   Fires all workers<br>
-										   Resets all currencies to 0<br>
-										   Use only in the <i><b>direst<br>
-										   of circumstances</i></b>">
-				Declare Bankruptcy
-			</button>
-		</transition>
-	</div>
-</template>
 
+		<div class="worker-hint" id="intern" key="intern-hint" v-if="projects >= 1 && !internsUnlocked">
+			<div>Reach<br>1 Product<br>to Unlock<br>******s</div>
+		</div>
+	</transition>
+</template>
 
 <script>
 
 import { mapState } from "vuex";
+
+const numberformat = require("swarm-numberformat");
 
 export default {
 
 	computed: {
 
 		...mapState ({
-			debug: state => state.debug,
-
 			showOfflineMessage: state => state.player.showOfflineMessage,
 			offlineMessage: state => state.player.offlineMessage,
 
@@ -106,13 +101,6 @@ export default {
 			);
 		},
 
-		updateRates() {
-			this.setValue("effortPerSecond", this.calcEffortPerSecond());
-			this.setValue("timePerSecond", this.calcTimePerSecond());
-			this.setValue("productivityPerSecond", this.calcProductivityPerSecond());
-			this.setValue("moneyPerSecond", this.calcMoneyPerSecond());
-		},
-
 		calcEffortPerSecond() {
 			let income = this.productivity;
 			let costs = this.employees * 10 * 0.1;
@@ -142,39 +130,35 @@ export default {
 			return income - costs;
 		},
 
-		save() {
-			let parsed = JSON.stringify(this.$store.state);
-			localStorage.setItem("saveFile", parsed);
-			console.log("Game saved");
+		updateRates() {
+			this.setValue("effortPerSecond", this.calcEffortPerSecond());
+			this.setValue("timePerSecond", this.calcTimePerSecond());
+			this.setValue("productivityPerSecond", this.calcProductivityPerSecond());
+			this.setValue("moneyPerSecond", this.calcMoneyPerSecond());
 		},
 
-		load() {
-			this.$store.commit("load");
+		formatNumber(num) {
+			return numberformat.formatShort(num, {maxSmall: "0", sigFigs: 3});
 		},
 
-		debugSet() {
-			let res = document.getElementById("debug-resource").value;
-			let val = parseInt(document.getElementById("debug-value").value);
-			console.log(res);
-			console.log(val);
-			this.setValue(res, val);
+		flashRed(elementID) {
+			let elem = document.getElementById(elementID);
+			elem.classList.remove("flash-red");
+			elem.classList.add("flash-red");
+			setTimeout(() => elem.classList.remove("flash-red"), 500);
 		},
 
-		bankruptcy() {
-			this.setValue("interns", 0);
-			this.setValue("employees", 0);
-			this.setValue("managers", 0);
-			this.setValue("analysts", 0);
-			this.setValue("salespeople", 0);
-			this.setValue("executives", 0);
-			this.setValue("effort", 0);
-			this.setValue("time", 0);
-			this.setValue("productivity", 0);
-			this.setValue("money", 0);
-			this.setValue("projects", 0);
-			this.setValue("products", 0);
-
+		hireIntern() {
+			this.adjustCurrency("interns", 1);
 			this.updateRates();
+		},
+
+		fireIntern() {
+			if (this.interns > 0) {
+				this.adjustCurrency("interns", -1);
+				this.flashRed("intern");
+				this.updateRates();
+			}
 		},
 	}
 
@@ -184,37 +168,8 @@ export default {
 
 <style>
 
-.footer {
-	position: absolute;
-	height: 38px;
-	padding-left: 2px;
-	padding-right: 2px;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	border: 1px solid black;
-	background-color: lightskyblue;
-}
-
-.footer > * {
-	margin: 2px;
-}
-
-.debug {
-	display: inline-block;
-}
-
-#bankrupt-button {
-	background-color: red;
-	float: right;
-}
-
-.fade-enter-active, .fade-leave-active {
-	transition: opacity 1s;
-}
-
-.fade-enter, .fade-leave-to {
-	opacity: 0;
+#intern {
+	background-color: rgba(0, 0, 255, 0.05);
 }
 
 </style>
