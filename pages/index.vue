@@ -1,6 +1,6 @@
 <template>
 	<div class="app">
-		<MyFooter />
+		<Footer />
 		<OfflineModal />
 		<Currencies />
 		<Projects />
@@ -13,7 +13,7 @@
 
 import { mapState, mapMutations } from "vuex";
 
-import MyFooter from "~/components/MyFooter.vue";
+import Footer from "~/components/Footer.vue";
 import OfflineModal from "~/components/OfflineModal.vue";
 import Currencies from "~/components/Currencies.vue";
 import Projects from "~/components/Projects.vue";
@@ -25,7 +25,7 @@ const numberformat = require("swarm-numberformat");
 export default {
 
 	components: {
-		MyFooter,
+		Footer,
 		OfflineModal,
 		Currencies,
 		Projects,
