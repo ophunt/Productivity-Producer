@@ -2,10 +2,17 @@
 	<div class="app">
 		<Footer />
 		<OfflineModal />
-		<Currencies />
-		<Projects />
-		<Workers />
-		<GroupHire />
+
+		<div class="left-col">
+			<Currencies />
+			<Projects />
+			<Workers />
+			<GroupHire />
+		</div>
+
+		<div class="right-col">
+
+		</div>
 	</div>
 </template>
 
@@ -308,9 +315,23 @@ export default {
 }
 
 .app {
-	width: 825px;
+	width: 100%;
 	margin: auto;
 	margin-bottom: 0px;
+}
+
+.left-col {
+	float: left;
+	width: 824px;
+	margin: 20px;
+}
+
+.right-col {
+	float: right;
+	background-color: red;
+	width: 270px;
+	height: 600px;
+	margin: 20px;
 }
 
 .redBackground {
