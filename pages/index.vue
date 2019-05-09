@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="right-col">
-
+			<PrestigeUpgrades />
 		</div>
 	</div>
 </template>
@@ -26,6 +26,7 @@ import Currencies from "~/components/Currencies.vue";
 import Projects from "~/components/Projects.vue";
 import Workers from "~/components/Workers.vue";
 import GroupHire from "~/components/GroupHire.vue";
+import PrestigeUpgrades from "~/components/PrestigeUpgrades.vue";
 
 const numberformat = require("swarm-numberformat");
 
@@ -37,7 +38,8 @@ export default {
 		Currencies,
 		Projects,
 		Workers,
-		GroupHire
+		GroupHire,
+		PrestigeUpgrades
 	},
 
 	computed: {
