@@ -54,10 +54,12 @@ const defaultPlayer = {
 	analystGroupSize: 0,
 	salespersonGroupSize: 0,
 	executiveGroupSize: 0,
+
+	prestigeUpgradesUnlocked: false,
 };
 
 export const state = () => ({
-	VERSION: "0.7.dev",
+	VERSION: "0.7.1",
 	debug: true,
 	player: defaultPlayer,
 });
@@ -174,6 +176,10 @@ export const mutations = {
 		// Group buyers
 		if (!state.player.groupsUnlocked && state.player.executives >= 1) {
 			state.player.groupsUnlocked = true;
+		}
+		// Prestige Upgrades
+		if (!state.player.prestigeUpgradesUnlocked && state.player.executives >= 100) {
+			state.player.prestigeUpgradesUnlocked = true;
 		}
 	},
 
