@@ -12,7 +12,7 @@
 			</div>
 		</div>
 
-		<div class="worker-hint" id="intern" key="intern-hint" v-if="projects >= 1 && !internsUnlocked">
+		<div class="worker-hint" id="intern" key="intern-hint" v-if="projects + products >= 1 && !internsUnlocked">
 			<div>Reach<br>1 Product<br>to Unlock<br>******s</div>
 		</div>
 	</transition>
