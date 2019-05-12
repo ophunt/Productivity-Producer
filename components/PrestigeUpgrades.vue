@@ -95,9 +95,9 @@ export default {
 }
 
 .prestigeUpgrade {
-	display: inline-block;
+	float: left;
 	margin-right: 18px;
-	margin-bottom: 19px;
+	margin-bottom: 18px;
 	height: 100px;
 	width: 100px;
 	border: 1px solid black;

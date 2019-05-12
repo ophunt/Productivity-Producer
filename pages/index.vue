@@ -325,15 +325,15 @@ export default {
 .left-col {
 	float: left;
 	width: 824px;
-	margin: 20px;
+	margin: 5px;
 }
 
 .right-col {
 	float: right;
 	background-color: red;
-	width: 270px;
+	width: 260px;
 	height: 600px;
-	margin: 20px;
+	margin: 5px;
 }
 
 .redBackground {
